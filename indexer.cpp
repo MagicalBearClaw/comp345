@@ -3,10 +3,28 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <sstream> // temporary to use string as stream
+
+typedef std::map<std::string, int> Worderator; // find better name
+
+void indexWord(Worderator& dict, std::string& word) {
+  if (dict.find(word) == dict.end()) { // checks if word does not exist
+    dict[word] = 1;
+  } else {
+    dict[word]++;
+  }
+}
 
 int main() {
-  std::map<std::string, int> dictionary;
-  dictionary["test"] = 20;
-  std::cout << dictionary["test"] << std::endl;
+  Worderator dictionary;
+  std::string test = "this is a test of adding test words to the dictionary"; // replace by file IO
+  std::istringstream testStream(test);
+  std::string word;
+  while (testStream >> word) {
+    indexWord(dictionary, word);
+  }
+  std::cout << "test: " << dictionary["test"] << std::endl;
+  std::cout << "dictionary: " << dictionary["dictionary"] << std::endl;
+  std::cout << "this: " << dictionary["this"] << std::endl;
   return 0;
 }
