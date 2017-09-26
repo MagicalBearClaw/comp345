@@ -7,27 +7,50 @@
 #include <sstream> // temporary to use string as stream
 
 
-typedef std::map<std::string, int> Worderator; // find better name
-
-
 int main() {
-  Worderator dictionary;
+  Indexer i;
+  std::string fileName = "test";
+  i.createDocument(fileName);
   std::string test = "this is a test of adding test words to the dictionary"; // replace by file IO
   std::istringstream testStream(test);
   std::string word;
   while (testStream >> word) {
-    indexWord(dictionary, word);
+    i.addWord(fileName, word);
   }
-  std::cout << "test: " << dictionary["test"] << std::endl;
-  std::cout << "dictionary: " << dictionary["dictionary"] << std::endl;
-  std::cout << "this: " << dictionary["this"] << std::endl;
+  WordCtr* doc = i[fileName];
+  std::cout << "test: " << (*doc)["test"] << std::endl;
+  std::cout << "dictionary: " << (*doc)["dictionary"] << std::endl;
+  std::cout << "this: " << (*doc)["this"] << std::endl;
   return 0;
 }
 
-void indexWord(Worderator& dict, std::string& word) {
+Indexer::Indexer() {
+  documents = {};
+}
+
+void indexWord(WordCtr& dict, std::string& word) {
   if (dict.find(word) == dict.end()) { // checks if word does not exist
     dict[word] = 1;
   } else {
     dict[word]++;
   }
+}
+
+void Indexer::createDocument(std::string& name) {
+  documents[name] = {};
+}
+
+void Indexer::addWord(std::string& docName, std::string& word) {
+  // add document if none exists
+  if(documents.find(docName) == documents.end()) {
+    createDocument(docName);
+  }
+  indexWord(documents[docName], word); // move this logic into this method
+}
+
+WordCtr* Indexer::operator[](std::string docName) {
+  if (documents.find(docName) == documents.end()) {
+    return nullptr;
+  }
+  return &documents[docName];
 }
