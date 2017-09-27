@@ -17,7 +17,7 @@ int main() {
   while (testStream >> word) {
     i.addWord(fileName, word);
   }
-  WordCtr* doc = i[fileName];
+  Document* doc = i[fileName];
   std::cout << "test: " << (*doc)["test"] << std::endl;
   std::cout << "dictionary: " << (*doc)["dictionary"] << std::endl;
   std::cout << "this: " << (*doc)["this"] << std::endl;
@@ -45,10 +45,10 @@ void Indexer::addWord(std::string& docName, std::string& word) {
   if(documents.find(docName) == documents.end()) {
     createDocument(docName);
   }
-  indexWord(documents[docName], word); // move this logic into this method
+  documents[docName].indexWord(word); // move this logic into this method
 }
 
-WordCtr* Indexer::operator[](std::string docName) {
+Document* Indexer::operator[](std::string docName) {
   if (documents.find(docName) == documents.end()) {
     return nullptr;
   }

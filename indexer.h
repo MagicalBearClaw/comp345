@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "document.h"
 
 #ifndef INDEXER_H
 #define INDEXER_H
@@ -15,11 +16,12 @@ void indexWord(WordCtr& dict, std::string& word);
 class Indexer {
 public:
   Indexer();
-  WordCtr* operator[](std::string docName);
+  Document* operator[](std::string docName);
   void createDocument(std::string& name);
   void addWord(std::string& docName, std::string& word);
 private:
-  std::map<std::string, WordCtr> documents;
+  std::map<std::string, Document> documents;
+  std::vector<std::string> words;
 
 };
 
