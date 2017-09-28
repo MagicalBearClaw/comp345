@@ -10,15 +10,8 @@ using namespace std; //am i using this wrong?
 //#include indexer.h //build the interface
 
 class DocumentIndexer {
-
-	
-	private:
-		//use a multimap instead?
-		std::map<std::string, int> dictionary;
-		//List of all the files to parse (found in inxes.txt)
-		std::vector<std::string> listOfFiles;
-
-	int main()
+public:
+	int run()
 	{
 		//Make a call to the retrieval method
 		listOfFiles = retrieve_files("index.txt");
@@ -34,6 +27,14 @@ class DocumentIndexer {
 
 		return 0;
 	}//end of main
+
+	
+	private:
+		//use a multimap instead?
+		std::map<std::string, int> dictionary;
+		//List of all the files to parse (found in inxes.txt)
+		std::vector<std::string> listOfFiles;
+
 
 
 	//This method will read a list of files from index.txt
@@ -117,4 +118,9 @@ class DocumentIndexer {
 	}
 
 };
+
+int main() {
+	DocumentIndexer d;
+	return d.run();
+}
 

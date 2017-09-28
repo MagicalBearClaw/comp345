@@ -1,31 +1,34 @@
 // TODO complete the assignment
 // https://moodle.concordia.ca/moodle/pluginfile.php/2916064/mod_resource/content/1/a1.pdf
 #include "indexer.h"
-#include <iostream>
-#include <map>
-#include <string>
-#include <sstream> // temporary to use string as stream
+ // temporary to use string as stream
 
 
 int main() {
-  Indexer i;
-  std::string fileName = "test";
-  i.createDocument(fileName);
-  std::string test = "this is a test of adding test words to the dictionary"; // replace by file IO
-  std::istringstream testStream(test);
-  std::string word;
-  while (testStream >> word) {
-    i.addWord(fileName, word);
+  Indexer *indexer = new Indexer();
+  std::ifstream ifs("index.txt");
+  while(!ifs.eof()){
+    ifs >> *indexer;
   }
-  Document* doc = i[fileName];
-  std::cout << "test: " << (*doc)["test"] << std::endl;
-  std::cout << "dictionary: " << (*doc)["dictionary"] << std::endl;
-  std::cout << "this: " << (*doc)["this"] << std::endl;
-  return 0;
+  std::cout << "done" << std::endl;
+  // fs >> indexer;
 }
 
 Indexer::Indexer() {
-  documents = {};
+  // documents = {};
+}
+
+std::ifstream & operator>>(std::ifstream &ifs, Indexer &indexer) {
+  std::string fileNm;
+  if(ifs >> fileNm) {
+    std::cout << fileNm << std::endl;
+    indexer.createDocument(fileNm);
+    std::ifstream docIfs(fileNm);
+    while(!docIfs.eof()) {
+      docIfs >> *indexer[fileNm];
+    }
+    // do file reading stuff for documents
+  }
 }
 
 void indexWord(WordCtr& dict, std::string& word) {
@@ -37,7 +40,7 @@ void indexWord(WordCtr& dict, std::string& word) {
 }
 
 void Indexer::createDocument(std::string& name) {
-  documents[name] = {};
+  documents[name] = new Document();
 }
 
 void Indexer::addWord(std::string& docName, std::string& word) {
@@ -45,12 +48,12 @@ void Indexer::addWord(std::string& docName, std::string& word) {
   if(documents.find(docName) == documents.end()) {
     createDocument(docName);
   }
-  documents[docName].indexWord(word); // move this logic into this method
+  documents[docName]->indexWord(word); // move this logic into this method
 }
 
 Document* Indexer::operator[](std::string docName) {
   if (documents.find(docName) == documents.end()) {
     return nullptr;
   }
-  return &documents[docName];
+  return documents[docName];
 }
