@@ -34,7 +34,10 @@ std::vector<std::string> getDocuments(const std::string& fileName)
 	std::ifstream file(fileName.c_str());
 	std::vector<std::string> docs;
 	if (!file.is_open())
-		std::cout << "Failed to open file: " << fileName << std::endl;
+	{
+		std::cerr << "Failed to open file: " << fileName << std::endl;
+		std::exit(-1);
+	}
 	std::string line;
 	while (getline(file, line))
 	{
@@ -53,7 +56,10 @@ std::unordered_map<std::string, std::vector<int>> processDocuments(const std::ve
 	{
 		std::ifstream file(*it);
 		if (!file.is_open())
+		{
 			std::cout << "Failed to open file: " << *it << std::endl;
+			std::exit(-1);
+		}
 		std::stringstream buffer;
 		buffer << file.rdbuf();
 		readDocs.emplace_back(buffer.str());
