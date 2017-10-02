@@ -3,10 +3,10 @@
 #include "indexer.h"
  // temporary to use string as stream
 
-
 int main() {
   Indexer *indexer = new Indexer();
   std::ifstream ifs("index.txt");
+  assert(ifs.good() && "Invalid file name");
   while(!ifs.eof()){
     ifs >> *indexer;
   }
@@ -24,6 +24,7 @@ std::ifstream & operator>>(std::ifstream &ifs, Indexer &indexer) {
     std::cout << fileNm << std::endl;
     indexer.createDocument(fileNm);
     std::ifstream docIfs(fileNm);
+    assert(docIfs.good() && "Invalid file name"); // good even if vscode complains :/
     while(!docIfs.eof()) {
       docIfs >> *indexer[fileNm];
     }
