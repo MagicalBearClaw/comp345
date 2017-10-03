@@ -23,3 +23,9 @@ lotsofpuntuation!,>?(){}
 do!@#$%^&*()_+-={}[]\';:".,><?/symbols\s"
 
 '; DROP TABLE USER;--
+
+fuckedU+FEFFhuh
+fucked\U+FEFFhuh
+fucked/U+FEFFhuh
+fucked"U+FEFF"huh
+fucked&#65279;huh

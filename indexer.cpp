@@ -12,16 +12,20 @@
 
 /**
  * Assignment 1 - COMP345 - Advanced Programming with c++
- * @author Michael McMahon		Student ID: 26250912
- * @author Christopher Dufort	Student ID: 40030286
- * @author Jesse Tremblay		Student ID: 40027271
+ * @author	Michael McMahon		Student ID: 26250912
+ * @author	Christopher Dufort	Student ID: 40030286
+ * @author	Jesse Tremblay		Student ID: 40027271
+ * @version	Assignment1
+ * @since	October, 3rd, 2017
  *
  */
 
+//static global variables
 static const std::string title = "Dictionary";
 static int maxColumnLength = 0;
 static int maxWordLength = title.length();
 
+//function declarations
 std::vector<std::string> getDocuments(const std::string& fileName);
 void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords);
 std::unordered_map<std::string, std::vector<int>> processDocuments(const std::vector<std::string>& docs);
@@ -31,6 +35,7 @@ void drawLine(const int length);
 void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName);
 std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words);
 
+// function defenitions
 /**
 * This is the starting point of the program.
 *
@@ -47,6 +52,11 @@ int main() {
 	return 0;
 }
 
+/**
+* This function is responsible for building the vector of string file names.
+* @param fileName	The filename of the document to have its contents retrieved
+* @return	std::vector<std::string> ...
+*/
 std::vector<std::string> getDocuments(const std::string& fileName)
 {
 
@@ -65,9 +75,14 @@ std::vector<std::string> getDocuments(const std::string& fileName)
 	return docs;
 }
 
+/**
+* This function is responsible for building an undordermap conaining words and their associated word counts.
+* @param docs	A vector of string which contain various filenames to iterate through
+* @return	An unordered_map of type <string,vector<int>> containing all the words and instance counts per file
+*/
 std::unordered_map<std::string, std::vector<int>> processDocuments(const std::vector<std::string>& docs)
 {
-	/// get all file contents
+	//get all file contents
 	std::vector<std::string> readDocs;
 	std::stringstream buffer;
 	std::unordered_map<std::string, std::vector<int>> processedWords;
@@ -93,10 +108,15 @@ std::unordered_map<std::string, std::vector<int>> processDocuments(const std::ve
 	return processedWords;
 }
 
+/**
+* This function is responsible for building an undordermap conaining words and their associated word counts.
+* @param docs	A vector of string which contain various filenames to iterate through
+* @return	An unordered_map of type <string,vector<int>> containing all the words and instance counts per file
+*/
 std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vector<std::string>& docs)
 {
 	size_t current;
-	std::string delimiters = " ,-':!().?\";ï¿½~{}/*\n";
+	std::string delimiters = " ,\t-':!().?\";–~{}/*\n";
 	size_t next = -1;
 	std::unordered_map<std::string, std::vector<int>> dictionary;
 	std::vector<int> defaultcounts;
@@ -131,10 +151,16 @@ std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vec
 	return dictionary;
 }
 
+/**
+* This function is responsible for ...
+* @param docs	A vector of string which contain various filenames to iterate through
+* @param processedWords	...
+* 
+*/
 void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords)
 {
 	size_t current;
-	std::string delimiters = " ,-':!().?\";ï¿½~{}/*\n";
+	std::string delimiters = " ,\t-':!().?\";–~{}/*\n";
 	size_t next = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
@@ -156,7 +182,13 @@ void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std:
 		++index;
 	}
 }
-
+/**
+* This function is responsible for...
+* @param words ...
+* @param keys	...
+* @param docs	A vector of string which contain various filenames to iterate through
+* 
+*/
 void draw(const std::unordered_map<std::string, std::vector<int>>& words, std::vector<std::string> keys, const std::vector<std::string>& docs)
 {
 
@@ -208,7 +240,11 @@ void drawLine(const int length) {
 		std::cout << "*";
 	std::cout << std::endl;
 }
-
+/**
+* This function is called to alter the words map to remove all isntances of stop words.
+* @param words	unordered map containing words and their associated word counts stored in a vector.
+* @param fileName	the filename containing a list of words to trigger as stop words
+*/
 void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName)
 {
 	std::ifstream file(fileName.c_str());
@@ -226,6 +262,11 @@ void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, s
 }
 
 
+/**
+* This function's purpose is to transform the contents of the given map into a sorted vector of strings.
+* @param words	unordered map containing words and their associated word counts stored in a vector.
+* @ return	std::vector<std::string> a vector containing sorted words.
+*/
 std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words)
 {
 	std::vector<std::string> vecOfWords;
