@@ -11,7 +11,8 @@
 #include <iomanip>
 
 static const std::string title = "Dictionary";
-static int maxColumnLength = title.length();
+static int maxColumnLength = 0;
+static int maxWordLength = title.length();
 
 std::vector<std::string> getDocuments(const std::string& fileName);
 void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords);
@@ -84,7 +85,7 @@ std::unordered_map<std::string, std::vector<int>> processDocuments(const std::ve
 std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vector<std::string>& docs)
 {
 	size_t current;
-	std::string delimiters = " ,-':!().?\";—~{}/*\n";
+	std::string delimiters = " ,-':!().?\";ï¿½~{}/*\n";
 	size_t next = -1;
 	std::unordered_map<std::string, std::vector<int>> dictionary;
 	std::vector<int> defaultcounts;
@@ -101,8 +102,8 @@ std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vec
 			next = doc.find_first_of(delimiters, current);
 			std::string currentword = doc.substr(current, next - current);
 			std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
-			if (currentword.size() > maxColumnLength) {
-				maxColumnLength = currentword.size();
+			if (currentword.size() > maxWordLength) {
+				maxWordLength = currentword.size();
 			}
 
 			words.emplace_back(currentword);
@@ -122,7 +123,7 @@ std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vec
 void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords)
 {
 	size_t current;
-	std::string delimiters = " ,-':!().?\";—~{}/*\n";
+	std::string delimiters = " ,-':!().?\";ï¿½~{}/*\n";
 	size_t next = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
@@ -148,19 +149,19 @@ void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std:
 void draw(const std::unordered_map<std::string, std::vector<int>>& words, std::vector<std::string> keys, const std::vector<std::string>& docs)
 {
 
-	int columnCount = docs.size() + 1;
-	int horizontalLine = columnCount * (maxColumnLength + 1) + columnCount + 2;
+	int columnCount = docs.size();
+	int horizontalLine = (columnCount * (maxColumnLength + 2)) + (maxWordLength + 2) + columnCount + 2;
 
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
 
 	//display a header line including the word dictionary and the list of document names
-	std::cout << "* " << std::setw(maxColumnLength) << std::left << title;
+	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
 	//Loop to display all file names seperated by an asterisk
 	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
 	{
-		std::cout  << " *" << std::setw(maxColumnLength) << std::right << *it;
+		std::cout  << " * " << std::setw(maxColumnLength) << std::right << *it;
 	}
 	std::cout << " *" << std::endl;
 	
@@ -171,12 +172,12 @@ void draw(const std::unordered_map<std::string, std::vector<int>>& words, std::v
 	for (auto it = keys.begin(); it != keys.end(); ++it)
 	{
 		std::string currentWord = *it;
-		std::cout << "* " << std::left << std::setw(maxColumnLength) << currentWord;
+		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		std::vector<int> counts = words.at(currentWord);
 		int indx = 0;
 		for (auto it = counts.begin(); it != counts.end(); ++it)
 		{
-			std::cout << " *" << std::right << std::setw(maxColumnLength) << *it;
+			std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
 			indx++;
 		}
 		std::cout << " *" << std::endl;
