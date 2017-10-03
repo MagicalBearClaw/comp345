@@ -25,7 +25,6 @@ std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector
 
 int main() {
 	std::vector<std::string> docs = getDocuments("index.txt");
-
 	std::unordered_map<std::string, std::vector<int>> indexed = processDocuments(docs);
 	std::vector<std::string> sorted = mapToVector(indexed);
 	draw(indexed, sorted, docs);
