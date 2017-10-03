@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <string>
 #include <array>
 #include <vector>
@@ -24,16 +24,20 @@
 static const std::string title = "Dictionary";
 static int maxColumnLength = 0;
 static int maxWordLength = title.length();
+static std::string delimiters = " ,\t-':!().?\";â€“~{}/*\n\t\r";
+
+static std::vector<std::string> stopWords;
 
 //function declarations
 std::vector<std::string> getDocuments(const std::string& fileName);
-void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords);
 std::unordered_map<std::string, std::vector<int>> processDocuments(const std::vector<std::string>& docs);
 std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vector<std::string>& docs);
 void draw(const std::unordered_map<std::string, std::vector<int>>& indexed, std::vector<std::string> keys, const std::vector<std::string>& docs);
 void drawLine(const int length);
-void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName);
+void declareLocalStopWOrds();
+void removeStopWords(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName);
 std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words);
+std::vector<int> calculatTotalWordCounts(const std::unordered_map<std::string, std::vector<int>>& words, const int numOfDocs);
 
 // function defenitions
 /**
@@ -45,9 +49,9 @@ int main() {
 	std::unordered_map<std::string, std::vector<int>> indexed = processDocuments(docs);
 	std::vector<std::string> sorted = mapToVector(indexed);
 	draw(indexed, sorted, docs);
-	removeStopWOrds(indexed, "stopWords.txt");
+	removeStopWords(indexed, "stopWords.txt");
 	sorted = mapToVector(indexed);
-	std::cout << std::endl << "Without stopwords" << std::endl << std::endl;
+	std::cout << std::endl << "Without stopWords" << std::endl << std::endl;
 	draw(indexed, sorted, docs);
 	return 0;
 }
@@ -104,7 +108,7 @@ std::unordered_map<std::string, std::vector<int>> processDocuments(const std::ve
 	}
 	buffer.clear();
 	processedWords = buildDictionary(readDocs);
-	calculateDocs(readDocs, processedWords);
+	//calculateDocs(readDocs, processedWords);
 	return processedWords;
 }
 
@@ -116,14 +120,12 @@ std::unordered_map<std::string, std::vector<int>> processDocuments(const std::ve
 std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vector<std::string>& docs)
 {
 	size_t current;
-	std::string delimiters = " ,\t-':!().?\";–~{}/*\n";
 	size_t next = -1;
 	std::unordered_map<std::string, std::vector<int>> dictionary;
 	std::vector<int> defaultcounts;
 	defaultcounts.reserve(docs.size());
 	defaultcounts.assign(docs.size(), 0);
-	std::vector<std::string> words;
-
+	int docIndex = 0;
 	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
 	{
 		do
@@ -137,55 +139,25 @@ std::unordered_map<std::string, std::vector<int>> buildDictionary(const std::vec
 				maxWordLength = currentword.size();
 			}
 
-			words.emplace_back(currentword);
-
+			if (currentword == "")
+				continue;
+			std::vector<int> counts = dictionary[currentword];
+			if (counts.capacity() == 0)
+				counts = defaultcounts;
+			counts[docIndex] = counts[docIndex] + 1;
+			dictionary[currentword] = counts;
 		} while (next != std::string::npos);
-	}
 
-	for (std::vector<std::string>::const_iterator it = words.begin(); it != words.end(); ++it)
-	{
-		if (*it != "")
-			dictionary[*it] = defaultcounts;
+		++docIndex;
 	}
 
 	return dictionary;
 }
 
 /**
-* This function is responsible for ...
-* @param docs	A vector of string which contain various filenames to iterate through
-* @param processedWords	...
-* 
-*/
-void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords)
-{
-	size_t current;
-	std::string delimiters = " ,\t-':!().?\";–~{}/*\n";
-	size_t next = -1;
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
-	{
-		do
-		{
-			current = next + 1;
-			std::string doc = *it;
-			next = doc.find_first_of(delimiters, current);
-			std::string currentword = doc.substr(current, next - current);
-			std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
-			if (currentword != "")
-			{
-				std::vector<int> counts = processedWords[currentword];
-				counts[index] = counts[index] + 1;
-				processedWords[currentword] = counts;
-			}
-		} while (next != std::string::npos);
-		++index;
-	}
-}
-/**
-* This function is responsible for...
-* @param words ...
-* @param keys	...
+* This function is responsible for drawing a table of each words and the count in each document.
+* @param words The hashmap of words and their counts
+* @param keys	The sorted keys of the hash map;
 * @param docs	A vector of string which contain various filenames to iterate through
 * 
 */
@@ -217,15 +189,24 @@ void draw(const std::unordered_map<std::string, std::vector<int>>& words, std::v
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		std::vector<int> counts = words.at(currentWord);
-		int indx = 0;
 		for (auto it = counts.begin(); it != counts.end(); ++it)
 		{
 			std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
-			indx++;
 		}
 		std::cout << " *" << std::endl;
 	}
 
+	//display a hoirzontal line of asterisks
+	drawLine(horizontalLine);
+
+	// Display totals
+	std::vector<int> totals = calculatTotalWordCounts(words, docs.size());
+	std::cout << "* " << std::left << std::setw(maxWordLength) << "total";
+	for (auto it = totals.begin(); it != totals.end(); ++it)
+	{
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
+	}
+	std::cout << " *" << std::endl;
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
 }
@@ -240,24 +221,48 @@ void drawLine(const int length) {
 		std::cout << "*";
 	std::cout << std::endl;
 }
+
+
+std::vector<int> calculatTotalWordCounts(const std::unordered_map<std::string, std::vector<int>>& words, const int numOfDocs)
+{
+	std::vector<int> totals;
+	totals.reserve(numOfDocs);
+	totals.assign(numOfDocs, 0);
+
+	for (auto it = words.begin(); it != words.end(); ++it)
+	{
+		for (int i = 0; i < totals.size(); i++)
+		{
+			totals[i] += it->second[i];
+		}
+	}
+
+	return totals;
+}
+
 /**
 * This function is called to alter the words map to remove all isntances of stop words.
 * @param words	unordered map containing words and their associated word counts stored in a vector.
 * @param fileName	the filename containing a list of words to trigger as stop words
 */
-void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName)
+void removeStopWords(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName)
 {
 	std::ifstream file(fileName.c_str());
 	std::string line;
 	if (!file.is_open())
 	{
-		std::cout << "Failed to open file: " << fileName << std::endl;
-		std::exit(-1);
+		declareLocalStopWOrds();
+		for (auto it = stopWords.begin(); it != stopWords.end(); ++it)
+		{
+			words.erase(*it);
+		}
 	}
-
-	while (std::getline(file, line))
+	else
 	{
-		words.erase(line);
+		while (std::getline(file, line))
+		{
+			words.erase(line);
+		}
 	}
 }
 
@@ -278,4 +283,187 @@ std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector
 	std::sort(vecOfWords.begin(), vecOfWords.end());
 
 	return vecOfWords;
+}
+
+/**
+* This function's purpose is to declare the avaiable stop words in the case where 
+* it cannot find a stopwords.txt
+*/
+
+void declareLocalStopWOrds()
+{
+	stopWords.emplace_back("a");
+	stopWords.emplace_back("about");
+	stopWords.emplace_back("above");
+	stopWords.emplace_back("after");
+	stopWords.emplace_back("again");
+	stopWords.emplace_back("against");
+	stopWords.emplace_back("all");
+	stopWords.emplace_back("am");
+	stopWords.emplace_back("an");
+	stopWords.emplace_back("and");
+	stopWords.emplace_back("any");
+	stopWords.emplace_back("are");
+	stopWords.emplace_back("aren't");
+	stopWords.emplace_back("as");
+	stopWords.emplace_back("at");
+	stopWords.emplace_back("be");
+	stopWords.emplace_back("because");
+	stopWords.emplace_back("been");
+	stopWords.emplace_back("before");
+	stopWords.emplace_back("being");
+	stopWords.emplace_back("below");
+	stopWords.emplace_back("between");
+	stopWords.emplace_back("both");
+	stopWords.emplace_back("but");
+	stopWords.emplace_back("by");
+	stopWords.emplace_back("can't");
+	stopWords.emplace_back("cannot");
+	stopWords.emplace_back("could");
+	stopWords.emplace_back("couldn't");
+	stopWords.emplace_back("did");
+	stopWords.emplace_back("didn't");
+	stopWords.emplace_back("do");
+	stopWords.emplace_back("does");
+	stopWords.emplace_back("doesn't");
+	stopWords.emplace_back("doing");
+	stopWords.emplace_back("don't");
+	stopWords.emplace_back("down");
+	stopWords.emplace_back("during");
+	stopWords.emplace_back("each");
+	stopWords.emplace_back("few");
+	stopWords.emplace_back("for");
+	stopWords.emplace_back("from");
+	stopWords.emplace_back("further");
+	stopWords.emplace_back("had");
+	stopWords.emplace_back("hadn't");
+	stopWords.emplace_back("has");
+	stopWords.emplace_back("hasn't");
+	stopWords.emplace_back("have");
+	stopWords.emplace_back("haven't");
+	stopWords.emplace_back("having");
+	stopWords.emplace_back("he");
+	stopWords.emplace_back("he'd");
+	stopWords.emplace_back("he'll");
+	stopWords.emplace_back("he's");
+	stopWords.emplace_back("her");
+	stopWords.emplace_back("here");
+	stopWords.emplace_back("here's");
+	stopWords.emplace_back("hers");
+	stopWords.emplace_back("herself");
+	stopWords.emplace_back("him");
+	stopWords.emplace_back("himself");
+	stopWords.emplace_back("his");
+	stopWords.emplace_back("how");
+	stopWords.emplace_back("how's");
+	stopWords.emplace_back("i");
+	stopWords.emplace_back("i'd");
+	stopWords.emplace_back("i'll");
+	stopWords.emplace_back("i'm");
+	stopWords.emplace_back("i've");
+	stopWords.emplace_back("if");
+	stopWords.emplace_back("in");
+	stopWords.emplace_back("into");
+	stopWords.emplace_back("is");
+	stopWords.emplace_back("isn't");
+	stopWords.emplace_back("it");
+	stopWords.emplace_back("it's");
+	stopWords.emplace_back("its");
+	stopWords.emplace_back("itself");
+	stopWords.emplace_back("let's");
+	stopWords.emplace_back("me");
+	stopWords.emplace_back("more");
+	stopWords.emplace_back("most");
+	stopWords.emplace_back("mustn't");
+	stopWords.emplace_back("my");
+	stopWords.emplace_back("myself");
+	stopWords.emplace_back("no");
+	stopWords.emplace_back("nor");
+	stopWords.emplace_back("not");
+	stopWords.emplace_back("of");
+	stopWords.emplace_back("off");
+	stopWords.emplace_back("on");
+	stopWords.emplace_back("once");
+	stopWords.emplace_back("only");
+	stopWords.emplace_back("or");
+	stopWords.emplace_back("other");
+	stopWords.emplace_back("ought");
+	stopWords.emplace_back("our");
+	stopWords.emplace_back("ours");
+	stopWords.emplace_back("ourselves");
+	stopWords.emplace_back("out");
+	stopWords.emplace_back("over");
+	stopWords.emplace_back("own");
+	stopWords.emplace_back("same");
+	stopWords.emplace_back("shan't");
+	stopWords.emplace_back("she");
+	stopWords.emplace_back("she'd");
+	stopWords.emplace_back("she'll");
+	stopWords.emplace_back("she's");
+	stopWords.emplace_back("should");
+	stopWords.emplace_back("shouldn't");
+	stopWords.emplace_back("so");
+	stopWords.emplace_back("some");
+	stopWords.emplace_back("such");
+	stopWords.emplace_back("than");
+	stopWords.emplace_back("that");
+	stopWords.emplace_back("that's");
+	stopWords.emplace_back("the");
+	stopWords.emplace_back("their");
+	stopWords.emplace_back("theirs");
+	stopWords.emplace_back("them");
+	stopWords.emplace_back("themselves");
+	stopWords.emplace_back("then");
+	stopWords.emplace_back("there");
+	stopWords.emplace_back("there's");
+	stopWords.emplace_back("these");
+	stopWords.emplace_back("they");
+	stopWords.emplace_back("they'd");
+	stopWords.emplace_back("they'll");
+	stopWords.emplace_back("they're");
+	stopWords.emplace_back("they've");
+	stopWords.emplace_back("this");
+	stopWords.emplace_back("those");
+	stopWords.emplace_back("through");
+	stopWords.emplace_back("to");
+	stopWords.emplace_back("too");
+	stopWords.emplace_back("under");
+	stopWords.emplace_back("until");
+	stopWords.emplace_back("up");
+	stopWords.emplace_back("very");
+	stopWords.emplace_back("was");
+	stopWords.emplace_back("wasn't");
+	stopWords.emplace_back("we");
+	stopWords.emplace_back("we'd");
+	stopWords.emplace_back("we'll");
+	stopWords.emplace_back("we're");
+	stopWords.emplace_back("we've");
+	stopWords.emplace_back("were");
+	stopWords.emplace_back("weren't");
+	stopWords.emplace_back("what");
+	stopWords.emplace_back("what's");
+	stopWords.emplace_back("when");
+	stopWords.emplace_back("when's");
+	stopWords.emplace_back("where");
+	stopWords.emplace_back("where's");
+	stopWords.emplace_back("which");
+	stopWords.emplace_back("while");
+	stopWords.emplace_back("who");
+	stopWords.emplace_back("who's");
+	stopWords.emplace_back("whom");
+	stopWords.emplace_back("why");
+	stopWords.emplace_back("why's");
+	stopWords.emplace_back("with");
+	stopWords.emplace_back("won't");
+	stopWords.emplace_back("would");
+	stopWords.emplace_back("wouldn't");
+	stopWords.emplace_back("you");
+	stopWords.emplace_back("you'd");
+	stopWords.emplace_back("you'll");
+	stopWords.emplace_back("you're");
+	stopWords.emplace_back("you've");
+	stopWords.emplace_back("your");
+	stopWords.emplace_back("yours");
+	stopWords.emplace_back("yourself");
+	stopWords.emplace_back("yourselves");
 }
