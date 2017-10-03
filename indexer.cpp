@@ -10,6 +10,14 @@
 #include <algorithm>
 #include <iomanip>
 
+/**
+ * Assignment 1 - COMP345 - Advanced Programming with c++
+ * @author Michael McMahon		Student ID: 26250912
+ * @author Christopher Dufort	Student ID: 40030286
+ * @author Jesse Tremblay		Student ID: 40027271
+ *
+ */
+
 static const std::string title = "Dictionary";
 static int maxColumnLength = title.length();
 
@@ -22,7 +30,10 @@ void drawLine(const int length);
 void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName);
 std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words);
 
-
+/**
+* This is the starting point of the program.
+*
+*/
 int main() {
 	std::vector<std::string> docs = getDocuments("index.txt");
 	std::unordered_map<std::string, std::vector<int>> indexed = processDocuments(docs);
