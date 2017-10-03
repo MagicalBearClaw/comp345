@@ -20,6 +20,7 @@ int main()
 }
 
 Indexer::Indexer()
+  : maxWordLength(0)
 {
   // documents = {};
 }
@@ -29,7 +30,6 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
   std::string fileNm;
   if (ifs >> fileNm)
   {
-    std::cout << fileNm << std::endl;
     indexer.createDocument(fileNm);
     indexer.docNames.push_back(fileNm);
     std::ifstream docIfs(fileNm);
@@ -42,6 +42,7 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
       if (docIfs >> word)
       {
         char *cursor = punctuations;
+        // remove punctuation
         do
         {
           int pos = word.find(*cursor);
@@ -52,14 +53,19 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
         } while (*(++cursor));
         if (std::find(stopWords.begin(), stopWords.end(), word) == stopWords.end())
         {
-          std::cout << word << std::endl;
-          indexer.words.push_back(word);
+          if (word.length() > indexer.maxWordLength) {
+            indexer.maxWordLength = word.length();
+          }
+          if (std::find(indexer.words.begin(), indexer.words.end(), word) == indexer.words.end()) {
+            indexer.words.push_back(word);// only add words to the word list once
+          }
           doc->indexWord(word);
         }
       }
       // do file reading stuff for documents
     }
   }
+  std::cout << "max word length: " << indexer.maxWordLength << std::endl;
 }
 
 void indexWord(WordCtr &dict, std::string &word)
@@ -100,10 +106,15 @@ Document *Indexer::operator[](std::string docName)
 
 
 std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
+  ios << std::setw(indexer.maxWordLength) << "";
+  for (std::vector<std::string>::iterator j = indexer.docNames.begin(); j != indexer.docNames.end(); j++) {
+    ios << *j << " ";
+  }
+  ios << std::endl;
   for (std::vector<std::string>::const_iterator i = indexer.words.begin(); i != indexer.words.end(); i++) {
-    ios << *i << " ";
+    ios << std::setw(indexer.maxWordLength) << std::left << *i;
     for (std::vector<std::string>::iterator j = indexer.docNames.begin(); j != indexer.docNames.end(); j++) {
-      ios << (*indexer[*j])[*i] << " ";
+      ios << std:: setw(j->length()) << std::right << (*indexer[*j])[*i] << " ";
     }
     ios << std::endl;
   }
