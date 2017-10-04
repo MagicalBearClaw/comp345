@@ -25,8 +25,8 @@ do!@#$%^&*()_+-={}[]\';:".,><?/symbols\s"
 
 '; DROP TABLE USER;--
 
-fuckedU+FEFFhuh
-fucked\U+FEFFhuh
-fucked/U+FEFFhuh
-fucked"U+FEFF"huh
-fucked&#65279;huh
+fun+FEFFhuh
+fun\U+FEFFhuh
+fun+FEFFhuh
+fun+FEFF"huh
+fun&#65279;huh
