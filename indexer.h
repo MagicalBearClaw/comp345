@@ -14,11 +14,11 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 
-typedef std::map<std::string, int> WordCtr; // find better name
+// typedef std::map<std::string, int> WordCtr; // find better name
 
 int main();
 
-void indexWord(WordCtr& dict, std::string& word);
+// void indexWord(WordCtr& dict, std::string& word);
 
 // should keep track of largest word for styling
 class Indexer {

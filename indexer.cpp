@@ -91,18 +91,18 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
   }
   std::cout << "max word length: " << indexer.maxWordLength << std::endl;
 }
-
-void indexWord(WordCtr &dict, std::string &word)
-{
-  if (dict.find(word) == dict.end())
-  { // checks if word does not exist
-    dict[word] = 1;
-  }
-  else
-  {
-    dict[word]++;
-  }
-}
+// legacy code
+// void indexWord(WordCtr &dict, std::string &word)
+// {
+//   if (dict.find(word) == dict.end())
+//   { // checks if word does not exist
+//     dict[word] = 1;
+//   }
+//   else
+//   {
+//     dict[word]++;
+//   }
+// }
 
 void Indexer::createDocument(std::string &name)
 {
