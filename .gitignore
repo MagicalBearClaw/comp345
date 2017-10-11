@@ -2,3 +2,5 @@
 **/Debug
 **/*.vcxproj*
 **/*.exe
+**/*.o
+**/*.gch
