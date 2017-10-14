@@ -5,4 +5,3 @@
 **/*.o
 **/*.gch
 test.mk
-test.cpp
