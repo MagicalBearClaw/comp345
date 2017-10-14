@@ -4,5 +4,8 @@
 **/*.exe
 **/*.o
 **/*.gch
+<<<<<<< HEAD
 test.mk
+=======
+>>>>>>> development
 test.cpp
