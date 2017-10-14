@@ -1,45 +1,44 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <algorithm>
+
 #include "document.h"
 
 const int notFound = 0;
 
-Document::Document() 
-  // : punctuations("_{}[]#()<>%:;.?*+^&|~!=,\"'\0")
- {} 
+Document::Document() {} 
 
 Document::Document(std::string fileName): fileName(fileName) {
-  // read contents into document object
-}
-
-Document::~Document() {
-  delete fileContent;
-}
-// find a way to reuse this
-int Document::operator[](std::string word) {
-  if (document.find(word) == document.end()) { // checks if word does not exist
-    return 0;
+  std::fstream file(fileName);
+  std::stringstream buffer;
+  if (!file.is_open()) {
+    std::cout << "Failed to open file: " << fileName << std::endl;
+    std::_Exit(-1);
   }
-  return document[word];
+  buffer << file.rdbuf();
+  fileContent = buffer.str();
 }
 
-void Document::indexWord(std::string word) {
-  document[word] = (*this)[word] + 1;
-}
+Document::~Document() {}
 
 std::string Document::name() {
-  return fileName;
+  return !fileName.empty() ? fileName : "unnamed document";
 }
 
 
 int Document::size() {
-  return fileContent->length();
+  return fileContent.length();
 }
 
-std::string* Document::content() {
+std::string Document::content() {
   return fileContent;
 }
 
-// std::ifstream & operator>>(std::ifstream &ifs, Document &doc) {
- 
-//     // do file reading stuff for documents
-//   }
-// }
+  // find a way to reuse this
+  // int Document::operator[](std::string word) {
+  //   if (document.find(word) == document.end()) { // checks if word does not exist
+  //     return 0;
+  //   }
+  //   return document[word];
+  // }
