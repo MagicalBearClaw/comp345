@@ -1,18 +1,30 @@
-#include <stopword.h>
-// TODO complete the assignment
-// https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
+#include <cstdlib>
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 
-//namespace
-Class Stopword
-{
-  private:
+#include "util.h"
+#include "stopword.h"
 
-  public:
-    StopWord(){
+StopWord::StopWord() {}
 
+StopWord::StopWord(std::string fileName) {
+  // load file
+  std::ifstream file(fileName);
+  if (!file.is_open()) {
+    std::cout << "Missing " << fileName <<", exiting pro" <<std::endl;
+    std::exit(-1);
+  }
+  while (!file.eof()) {
+    std::string stopWord;
+    stopWord = crawlToDelimiter(file, ",\n ");
+    // make sure that the string actually has content
+    if(!stopWord.empty()) {
+      stopWords.push_back(stopWord);
     }
+  }
+}
 
-    //operator<<
-
-
-};
+bool StopWord::operator()(std::string word) {
+  return std::find(stopWords.begin(), stopWords.end(), word) != stopWords.end();
+}
