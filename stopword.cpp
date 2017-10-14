@@ -1,18 +1,19 @@
-#include <stopword.h>
-// TODO complete the assignment
-// https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
+#include "stopword.h"
 
-//namespace
-Class Stopword
-{
-  private:
+StopWord::StopWord() {}
 
-  public:
-    StopWord(){
+StopWord::StopWord(std::string fileName) {
+  // load file
+  std::ifstream file(fileName);
+  if (!file.is_open()) {
+    std::cout << "Missing " << fileName <<", exiting pro" <<std::endl;
+    std::exit(-1);
+  }
+  char* stopWord;
+  file.getline(stopWord, 100, ',');
+  stopWords.push_back(stopWord);
+}
 
-    }
-
-    //operator<<
-
-
-};
+bool StopWord::operator()(std::string word) {
+  return std::find(stopWords.begin(), stopWords.end(), word) != stopWords.end();
+}

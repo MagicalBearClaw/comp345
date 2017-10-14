@@ -13,3 +13,6 @@ $(OUTDIR)\indexer.o : indexer.cpp indexer.h
 
 $(OUTDIR)\document.o : document.cpp document.h
 	$(CC) $(CFLAGS) $(FLAGS) document.cpp -o $(OUTDIR)\document.o
+
+$(OUTDIR)\stopword.o : stopword.cpp stopword.h
+	$(CC) $(CFLAGS) $(FLAGS) stopword.cpp -o $(OUTDIR)\document.o
