@@ -1,29 +1,8 @@
 // TODO complete the assignment
 // https://moodle.concordia.ca/moodle/pluginfile.php/2916064/mod_resource/content/1/a1.pdf
-// // https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
+// https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
 
-// //namespace
-// Class Indexer
-// {
-//   private:
-//     int size;
-//   public:
-//       Indexer(){
 
-//     }
-//     //operator>>
-
-//     //operator<<
-
-//     void normalize(){
-
-//     }
-
-//     int size(){
-//       return this->size;
-//     }
-
-// };
 #include "indexer.h"
 // temporary to use string as stream
 
@@ -31,22 +10,27 @@ std::vector<std::string> stopWords = {"a", "about", "above", "after", "again", "
 
 int main()
 {
-  Indexer *indexer = new Indexer();
-  std::ifstream ifs("index.txt");
-  assert(ifs.good() && "Invalid file name");
-  while (!ifs.eof())
-  {
-    ifs >> *indexer;
-  }
-  std::cout << *indexer;
-  std::cout << "done" << std::endl;
-  // fs >> indexer;
+	//An object idx of class indexer holds the data structures created from the input documents
+	Indexer *indexer = new Indexer();
+	std::ifstream ifs("index.txt");
+	assert(ifs.good() && "Invalid file name");
+	while (!ifs.eof())
+	{
+	ifs >> *indexer;
+	}
+	std::cout << *indexer;
+	std::cout << "done" << std::endl;
+	// fs >> indexer;
 }
 
 Indexer::Indexer()
-  : maxWordLength(0)
+  : maxWordLength(0), documentCount(0)
 {
-  // documents = {};
+	documents = {};
+}
+
+Indexer::~Indexer() {
+	delete[] documents;
 }
 
 std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
@@ -87,22 +71,23 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
         }
       }
       // do file reading stuff for documents
-    }
+    }// end while
+	documentCount++;
   }
   std::cout << "max word length: " << indexer.maxWordLength << std::endl;
 }
 // legacy code
-// void indexWord(WordCtr &dict, std::string &word)
-// {
-//   if (dict.find(word) == dict.end())
-//   { // checks if word does not exist
-//     dict[word] = 1;
-//   }
-//   else
-//   {
-//     dict[word]++;
-//   }
-// }
+ //void indexWord(WordCtr &dict, std::string &word)
+ //{
+ //  if (dict.find(word) == dict.end())
+ //  { // checks if word does not exist
+ //    dict[word] = 1;
+ //  }
+ //  else
+ //  {
+ //    dict[word]++;
+ //  }
+ //}
 
 void Indexer::createDocument(std::string &name)
 {
@@ -142,4 +127,38 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
     }
     ios << std::endl;
   }
+}
+
+int Indexer::size() {
+	return documentCount;
+}
+
+int Indexer::normalize()
+{
+	return 0;
+}
+
+Document * Indexer::operator[](int position)
+{
+	int ctr = 0;
+	Document* requestedDocument;
+	for (std::map<std::string, Document*>::iterator it = documents.begin();
+		it != documents.end; ++it, ctr++) {
+		if (ctr == position) {
+			requestedDocument = it->second;
+			break;
+		}
+	}
+	//not sure if its safe to just return this inside the loop instead?
+	return requestedDocument;
+	//return nullptr;
+}
+
+double Indexer::calculateTFidf(double termFrequency, double documentFrequency)
+{
+	double tf_idf;
+
+	tf_idf = (1 + log(termFrequency)* log(documentCount / documentFrequency));
+
+	return tf_idf;
 }
