@@ -3,7 +3,7 @@
 #include <fstream>
 #include <algorithm>
 
-#include "document.h"
+#include "..\includes\document.h"
 
 const int notFound = 0;
 

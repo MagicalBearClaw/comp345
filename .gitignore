@@ -6,3 +6,4 @@
 **/*.gch
 test.mk
 test.cpp
+bin

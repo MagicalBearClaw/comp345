@@ -1,3 +1,0 @@
-﻿Print the two versions of the document-term matrix as deﬁned above to cout.
-Use stream manipulators to format the table entries: dictionary words left-adjusted, ﬁxed length, numbers right-adjusted, same width for each column. 
-Additionally, print a legend indicating the ﬁle name for each document (column in the table).

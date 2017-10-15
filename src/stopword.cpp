@@ -3,8 +3,8 @@
 #include <fstream>
 #include <iostream>
 
-#include "util.h"
-#include "stopword.h"
+#include "../includes/stopword.h"
+#include "../includes/util.h"
 
 StopWord::StopWord() {}
 

@@ -1,7 +1,8 @@
-#include <string>
-
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
+
+#include <string>
+
 /**
  * Class used to store the contents of a file.
  * This class also can be used to fetch additional metadata about the 

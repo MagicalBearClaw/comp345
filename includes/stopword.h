@@ -1,8 +1,9 @@
-#include <string>
-#include <vector>
 
 #ifndef STOPWORD_H
 #define STOPWORD_H
+
+#include <string>
+#include <vector>
 
 /**
  * Class used to filter stopwords based on a list of stopwords given

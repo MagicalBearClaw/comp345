@@ -5,6 +5,12 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#define SAFE_DELETE(x)		\
+{							\
+	delete x;				\
+	x = nullptr;			\
+}							\
+
 /**
  * @brief Crawls through a string to get a word before a delimiter
  * 

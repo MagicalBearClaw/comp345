@@ -1,0 +1,5 @@
+
+test
+This is the first of four programming assignments. Note that the assignments are not stand alone, but rather
+built on top of each other to form a bigger project. Hence, subsequent assignments will require you to extend
+and or refactor code you have written for the previous assignments.
