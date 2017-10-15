@@ -5,16 +5,19 @@
 #include <vector>
 
 /**
- * @brief This interface is responsible for providing a way to implement a new way
- * for breaking an input stream of characters into individual tokens.
- * 
- * 
+ * This interface is responsible for providing a statergy to break text
+ * into tokens.
  */
-class ITokenizerStratergy
+class I_tokenizer_stratergy
 {
 public:
+	/**
+	* Break up a string of words into a collection of tokens.
+	* @param text The text to be tokenized.
+	* @return std::vector<std::string> a collection of tokens.
+	*/
     virtual std::vector<std::string> tokenize(const std::string& text) = 0;
-	virtual ~ITokenizerStratergy() {}
+	virtual ~I_tokenizer_stratergy() {}
 };
 
 #endif

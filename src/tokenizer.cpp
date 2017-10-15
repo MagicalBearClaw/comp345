@@ -1,7 +1,7 @@
 #include "..\includes\tokenizer.h"
 #include "..\includes\util.h"
 
-tokenizer::tokenizer(ITokenizerStratergy * strat) : stratergy(strat)
+tokenizer::tokenizer(I_tokenizer_stratergy * strat) : stratergy(strat)
 {
 }
 
@@ -21,10 +21,18 @@ std::vector<std::string> tokenizer::tokenize(const std::string& text)
 	return std::vector<std::string>();
 }
 
-void tokenizer::setTokenizerStratergy(ITokenizerStratergy * strat)
+void tokenizer::setTokenizerStratergy(I_tokenizer_stratergy * strat)
 {
 	if (strat)
 		SAFE_DELETE(stratergy)
 
 	this->stratergy = strat;
+}
+
+std::ostream & operator<<(std::ostream & out, const tokenizer & o)
+{
+	if (o.stratergy)
+		return out << "Current stratergy information: @0x" << o.stratergy << std::endl;
+
+	return out << "Current stratergy information: There is not a statergy being used (nullptr)."  << std::endl;
 }
