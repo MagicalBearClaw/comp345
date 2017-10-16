@@ -16,7 +16,7 @@ public:
 	* @param text The text to be tokenized.
 	* @return std::vector<std::string> a collection of tokens.
 	*/
-    virtual std::vector<std::string> tokenize(const std::string& text) = 0;
+  virtual std::vector<std::string> tokenize(const std::string& text) = 0;
 	virtual ~I_tokenizer_stratergy() {}
 };
 

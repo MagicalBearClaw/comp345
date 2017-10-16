@@ -2,6 +2,7 @@
 #define DOCUMENT_H
 
 #include <string>
+#include <ostream>
 
 /**
  * Class used to store the contents of a file.
@@ -9,6 +10,17 @@
  * file such as the name and the size (in characters) of the file.
  */
 class Document {
+  /**
+   * @brief Operator overload for debug output 
+   * 
+   * Outputs the file name, size, and content
+   * 
+   * @param stream The output stream to write to
+   * @param doc the document to read from
+   * 
+   * @return std::ostream
+   */
+  friend std::ostream operator<<(std::ostream& stream, Document& doc);
 public:
   Document(); /**Constructor to create empty document*/
   /**

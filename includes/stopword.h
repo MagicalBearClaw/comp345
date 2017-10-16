@@ -10,6 +10,17 @@
  * at instatioation
  */
 class StopWord {
+  /**
+   * @brief Operator overload for debug output 
+   * 
+   * 
+   * 
+   * @param stream The output stream to write to
+   * @param sw the StopWord object to read from
+   * 
+   * @return std::ostream
+   */
+  friend std::ostream operator<<(std::ostream& stream, StopWord& sw);
 public:
   StopWord(); /**Creates an empty StopWord object*/
   /**
