@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "../includes/tokenizer.h"
-#include "../includes/default_tokenizer_stratergy.h"
+#include "../includes/default_tokenizer_strategy.h"
 
 int main(void)
 {

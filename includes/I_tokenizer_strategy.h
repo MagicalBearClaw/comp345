@@ -1,5 +1,5 @@
-#ifndef I_TOKENIZER_STRATERGY_H
-#define I_TOKENIZER_STRATERGY_H
+#ifndef I_TOKENIZER_STATEGY_H
+#define I_TOKENIZER_STATEGY_H
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
  * This interface is responsible for providing a statergy to break text
  * into tokens.
  */
-class I_tokenizer_stratergy
+class I_tokenizer_strategy
 {
 public:
 	/**
@@ -16,8 +16,8 @@ public:
 	* @param text The text to be tokenized.
 	* @return std::vector<std::string> a collection of tokens.
 	*/
-  virtual std::vector<std::string> tokenize(const std::string& text) = 0;
-	virtual ~I_tokenizer_stratergy() {}
+    virtual std::vector<std::string> tokenize(const std::string& text) = 0;
+	virtual ~I_tokenizer_strategy() {}
 };
 
 #endif

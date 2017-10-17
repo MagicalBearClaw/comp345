@@ -1,7 +1,7 @@
 OUTDIR = bin
 SRC = src
 INCLUDES = includes
-OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\main.o $(OUTDIR)\tokenizer.o $(OUTDIR)\ITokenizerStratergy.o
+OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o
 CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
@@ -10,11 +10,14 @@ FLAGS = -std=c++11
 app.exe: $(OBJS)
 	$(CC) $(DEBUG) $(FLAGS) $(OBJS) -o app.exe
 
-$(OUTDIR)\indexer.o : indexer.cpp indexer.h
-	$(CC) $(CFLAGS) $(FLAGS) indexer.cpp -o $(OUTDIR)\indexer.o
+$(OUTDIR)\indexer.o : $(SRC)\indexer.cpp $(INCLUDES)\indexer.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\indexer.cpp -o $(OUTDIR)\indexer.o
 
-$(OUTDIR)\ITokenizerStratergy.o : $(INCLUDES)\ITokenizerStratergy.h
-	$(CC) $(CFLAGS) $(FLAGS) $(INCLUDES)\ITokenizerStratergy.h -o $(OUTDIR)\ITokenizerStratergy.o
+$(OUTDIR)\i_tokenizer_strategy.o : $(INCLUDES)\i_tokenizer_strategy.h
+	$(CC) $(CFLAGS) $(FLAGS) $(INCLUDES)\i_tokenizer_strategy.h -o $(OUTDIR)\i_tokenizer_strategy.o
+
+$(OUTDIR)\default_tokenizer_strategy.o : $(INCLUDES)\default_tokenizer_strategy.h $(SRC)\default_tokenizer_strategy.cpp
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\default_tokenizer_strategy.cpp -o $(OUTDIR)\default_tokenizer_strategy.o
 
 $(OUTDIR)\tokenizer.o : $(SRC)\tokenizer.cpp  $(INCLUDES)\tokenizer.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\tokenizer.cpp -o $(OUTDIR)\tokenizer.o

@@ -21,3 +21,9 @@ std::string crawlToDelimiter(std::istream &stream, std::string delimiters) {
   }
   return buffer.str(); // return the remaining characters if the eof is reached
 }
+
+void drawLine(const int length) {
+	for (int i = 0; i != length; ++i)
+		std::cout << "*";
+	std::cout << std::endl;
+}

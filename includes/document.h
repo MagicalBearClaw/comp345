@@ -3,6 +3,11 @@
 
 #include <string>
 #include <ostream>
+#include <map>
+#include <vector>
+
+
+#include "..\includes\stopword.h"
 
 /**
  * Class used to store the contents of a file.
@@ -50,15 +55,19 @@ public:
    * @return int The number of characters in the document
    */
   int size();
+  std::vector<int> getVector(const std::vector<std::string>& words, StopWord* sw);
   /**
    * @brief Gets the contents of the document
    * 
    * @return std::string the contents of the document
    */
   std::string content();
+  void indexWord(std::string word);
+  int operator[](std::string word);
 private:
   std::string fileName;/**The name of the document*/
   std::string fileContent;/**The contents of the document*/
+  std::map<std::string, int> dictionary;
 };
 
 #endif
