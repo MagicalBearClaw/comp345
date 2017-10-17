@@ -1,14 +1,28 @@
 // TODO complete the assignment
 // https://moodle.concordia.ca/moodle/pluginfile.php/2916064/mod_resource/content/1/a1.pdf
 // https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
-#include <algorithm>
 
 #include "../includes/indexer.h"
 #include "../includes/util.h"
 #include "../includes/default_tokenizer_strategy.h"
+
+//Remove unused included
+#include <algorithm>
+//#include <map>
+#include <assert.h>
+#include <iostream>
+//#include <istream>
+//#include <vector>
+#include <string>
+//#include <sstream>
+#include <fstream>
+//#include <iterator>
+//#include <ostream>
+#include <iomanip>
+#include <cmath>
+
+
 // temporary to use string as stream
-
-
 
 int main()
 {
@@ -23,12 +37,24 @@ int main()
 	}
 	std::cout << *idx;
 	std::cout << "done" << std::endl;
+	idx->normalize();
+	std::vector<double> scores = idx->query("on top of each other to form a bigger project");
+	for (auto i = scores.begin(); i != scores.end(); i++) {
+		std::cout << *i << std::endl;
+	}
 
+	//Test this: Add an existing created document object  to the index object
+	//Document *d = new Document("filename");
+	//d >> idx;
+
+	return 0; //All went well.
 }
 
 Indexer::Indexer()
-  : maxWordLength(0), documentCount(0)
-{}
+  : maxWordLength(0), documentCount(0), normalized(false)
+{
+	//documentIndex is intialized by an implicit call to vector<T> default constructor.
+}
 
 Indexer::~Indexer() {}
 
@@ -54,9 +80,10 @@ std::ifstream &operator>>(Document &doc, Indexer &indexer)
 		}
 		doc.indexWord(*i);
 	}
-	indexer.documents.push_back(doc);
+	indexer.documentIndex.push_back(doc);
 	indexer.docNames.push_back(doc.name());
 	++indexer.documentCount;
+	indexer.normalized = false;
 }
 
 
@@ -75,7 +102,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
 	//Loop to display all file names seperated by an asterisk
-	for (auto it = indexer.documents.begin(); it != indexer.documents.end(); ++it)
+	for (auto it = indexer.documentIndex.begin(); it != indexer.documentIndex.end(); ++it)
 	{
 		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
 	}
@@ -89,7 +116,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	{
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
-		for (auto docs = indexer.documents.begin(); docs != indexer.documents.end(); ++docs)
+		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
 			std::cout << " * " << std::right << std::setw(maxColumnLength) << (*docs)[*it];
 		}
@@ -113,24 +140,82 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 
 int Indexer::size() {
 	return documentCount;
+	//return documentIndex.size();
 }
 
-int Indexer::normalize()
+int Indexer::calculateDocumentFrequency(std::string word){
+	int docFrequencyAcc = 0;
+	for(auto iter = documentIndex.begin(); iter != documentIndex.end(); ++iter){
+		docFrequencyAcc += (*iter)[word] ? 1 : 0;
+	}
+
+	return docFrequencyAcc;
+}
+// A function normalize() computes the tf-idf weights based on the number N of indexed documents.
+void Indexer::normalize()
 {
-	return 0;
+	int termFrequency = 0;
+	int documentFrequency = 0;
+	double dtModifier = 0.0; 
+	
+	for(auto iter = allWords.begin(); iter != allWords.end(); ++iter){
+		
+		documentFrequency = calculateDocumentFrequency(*iter);
+
+		dtModifier = std::log((double)documentCount / (double)documentFrequency);
+		docTermModifiers.push_back(dtModifier);
+		docTermFrequency.push_back(documentFrequency);
+	}
+	for (auto iter = documentIndex.begin(); iter != documentIndex.end(); ++iter) {
+		iter->normalize(allWords, docTermModifiers);
+	}
+
+	normalized = true;
+}
+
+bool Indexer::isNormalized(Indexer& indexer) {
+	return normalized;
 }
 
 Document Indexer::operator[](int position)
 {
-	return documents[position];
-	//return nullptr;
+	return documentIndex[position];
 }
 
-double Indexer::calculateTFidf(double termFrequency, double documentFrequency)
-{
-	double tf_idf;
 
-	tf_idf = (1 + log(termFrequency)* log(documentCount / documentFrequency));
+std::vector<double> Indexer::query(std::string queryString) {
+	Document queryDoc;
+	default_tokenizer_strategy strat;
+	std::vector<std::string> v = strat.tokenize(queryString);
+	std::vector<std::string> commonWords;
+	std::vector<double> commonDocTermModifiers;
+	std::vector<double> scores;
+	int position;
+	for (auto i = v.begin(); i != v.end(); ++i) {
+		auto element = std::find(allWords.begin(), allWords.end(), *i);
+		if (element != allWords.end()) {
+			position = element - allWords.begin();
+			queryDoc.indexWord(*i);
+			commonWords.push_back(*i);
+			commonDocTermModifiers.push_back(docTermModifiers[position]);
+		}
+	}
+	queryDoc.normalize(allWords, docTermModifiers);
 
-	return tf_idf;
+	double commonModifier;
+	double score;
+	for (auto iDoc = documentIndex.begin(); iDoc != documentIndex.end(); ++iDoc) {
+		double vectorProductAcc = 0.0;
+		for (auto cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
+			position = cWord - commonWords.begin();
+			commonModifier = commonDocTermModifiers[position];
+			vectorProductAcc += ((iDoc->termWeight(*cWord, commonModifier)) * (queryDoc.termWeight(*cWord, commonModifier)));
+		}
+		score = vectorProductAcc / (iDoc->docNorm() * queryDoc.docNorm());
+		if (std::isnan(score)) {
+			score = 0;
+		}
+		scores.push_back(score);
+	}
+	return scores;
 }

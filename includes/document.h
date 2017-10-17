@@ -55,7 +55,11 @@ public:
    * @return int The number of characters in the document
    */
   int size();
-  std::vector<int> getVector(const std::vector<std::string>& words, StopWord* sw);
+  double termWeight(std::string word, double documentModifier);
+  
+  double docNorm();
+  
+  void normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw = nullptr);
   /**
    * @brief Gets the contents of the document
    * 
@@ -63,11 +67,18 @@ public:
    */
   std::string content();
   void indexWord(std::string word);
+  /**
+   * @brief Returns the word count for a specific word
+   * 
+   * @param word 
+   * @return int 
+   */
   int operator[](std::string word);
 private:
   std::string fileName;/**The name of the document*/
   std::string fileContent;/**The contents of the document*/
   std::map<std::string, int> dictionary;
+  double norm;
 };
 
 #endif
