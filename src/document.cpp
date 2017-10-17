@@ -49,13 +49,11 @@ int Document::operator[](std::string word) {
 }
 
 void Document::normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw) {
-	// std::cout << "=================================================Normalizing: " << std::endl;
 	double normAcc = 0.0;
 	// check if a stopword reference is given
 	if (sw == nullptr) {
 		for (int i = 0; i != words.size(); ++i) {
 			normAcc += pow(termWeight(words[i], documentModifiers[i]), 2);
-			// std::cout << words[i] << " "  << (*this)[words[i]] << " " << documentModifiers[i] << "  " << normAcc << std::endl;
 		}
 		
 	}
@@ -67,14 +65,11 @@ void Document::normalize(const std::vector<std::string>& words, const std::vecto
 			}
 		}
 	}
-	// std::cout << "=================================================DONE! " << std::endl;
 	norm = std::sqrt(normAcc);
 }
 
 double Document::termWeight(std::string word, double documentFrequencyModifier) {
 	int termCount = (*this)[word];
-	// if (termCount)
-		// std::cout << word << " " << termCount << " " << documentFrequencyModifier << " " << ((1 + log(termCount)) * documentFrequencyModifier) << std::endl;
 	return termCount ? (1 + log(termCount)) * documentFrequencyModifier : 0.0;
 }
 
