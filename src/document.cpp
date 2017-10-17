@@ -23,6 +23,12 @@ Document::Document(std::string fileName): fileName(fileName) {
 
 Document::~Document() {}
 
+std::ostream operator<<(std::ostream& stream, Document& doc) {
+  stream << "Document: " << doc.fileName << std::endl;
+  stream << "Size: " << doc.size() << std::endl;
+  stream << "Content:\n" << doc.fileContent << std::endl;
+}
+
 std::string Document::name() {
   return !fileName.empty() ? fileName : "unnamed document";
 }

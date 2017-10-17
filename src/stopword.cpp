@@ -25,6 +25,13 @@ StopWord::StopWord(std::string fileName) {
   }
 }
 
+std::ostream operator<<(std::ostream& stream, StopWord& sw) {
+  for (auto i = sw.stopWords.begin(); i != sw.stopWords.end(); i++) {
+    stream << *i << ", ";
+  }
+  stream << std::endl;
+}
+
 bool StopWord::operator()(std::string word) {
   return std::find(stopWords.begin(), stopWords.end(), word) != stopWords.end();
 }
