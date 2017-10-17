@@ -1,16 +1,3 @@
-#include <map>
-#include <assert.h>
-#include <iostream>
-#include <istream>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <iterator>
-#include <ostream>
-#include <iomanip>
-#include <cmath>
-
 #include "document.h"
 
 #ifndef INDEXER_H
@@ -53,10 +40,10 @@ public:
 	* @brief computes the tf-idf weights based on the number N of indexed documents
 	*
 	* This function normalize() computes the tf-idf weights based on the number N of indexed documents.
+	* These weights are storied inside the indexer.
 	*
-	* @return int	The calculated tf-idf weight
 	*/
-	int normalize();
+	void normalize();
 
 	/**
 	* @brief Overloaded array access operator to retrieve document by index
@@ -67,36 +54,43 @@ public:
 	* @return Document*	The selected document object as requested by index.
 	*/
 	Document operator[] (int position);
+
+	/**
+	 * @brief Returns if the provided inedxer is normalized
+	 * 
+	 * @param indexer 
+	 * @return true 
+	 * @return false 
+	 */
+	bool isNormalized(Indexer& indexer);
+	std::vector<double> query(std::string queryString);
 private:
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength;
-	std::vector<Document> documents;
-	std::vector<std::string> words;
+	bool normalized; /** Status check if the index has been normalized*/
+	std::vector<Document> documentIndex;
+	//std::vector<std::string> words;
 	std::vector<std::string> docNames;
 	std::vector<std::string> allWords;
+	std::vector<double> docTermModifiers; // log(documnetCount/documentFrequency)
+	std::vector<int> docTermFrequency;
 	
 	/**
 	* @brief
 	*
-	* Term Frequency is the word count denoted by tf_td, where t is a term (token) in the dictionary and d is a document that was indexed.
+	* Term Frequency is the word count denoted by TF_td, where t is a term (token) in the dictionary and d is a document that was indexed.
 	*
 	* return
 	*/
-	double calulateTermFrequency();
-	/**
-	* @brief
-	*
-	* the document frequency dft for a term t is defined as the number of documents that t appears in
-	*/
-	double calculateDocumentFrequency(std::string word);
+	//double calulateTermFrequency();
 
 	/**
-	*
-	* @brief
-	*
-	* return
-	*/
-	double calculateTFidf(double termFrequency, double documentFrequency);
+	 * @brief the document frequency dft for a term t is defined as the number of documents that t appears in
+	 * 
+	 * @param word 
+	 * @return int 
+	 */
+	int calculateDocumentFrequency(std::string word);
 
 };
 
