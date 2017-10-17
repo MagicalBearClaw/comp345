@@ -47,7 +47,7 @@ public:
   
   double docNorm();
   
-  void normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw);
+  void normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw = nullptr);
   /**
    * @brief Gets the contents of the document
    * 

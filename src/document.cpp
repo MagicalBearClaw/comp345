@@ -48,31 +48,36 @@ int Document::operator[](std::string word) {
 	return dictionary[word];
 }
 
-void Document::normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw = nullptr) {
+void Document::normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw) {
+	// std::cout << "=================================================Normalizing: " << std::endl;
 	double normAcc = 0.0;
 	// check if a stopword reference is given
 	if (sw == nullptr) {
-		for (int i = 0; i != words.length(); ++i) {
+		for (int i = 0; i != words.size(); ++i) {
 			normAcc += pow(termWeight(words[i], documentModifiers[i]), 2);
+			// std::cout << words[i] << " "  << (*this)[words[i]] << " " << documentModifiers[i] << "  " << normAcc << std::endl;
 		}
+		
 	}
 	else 
 	{
-		for (int i = 0; i != words.length(); ++i) {
+		for (int i = 0; i != words.size(); ++i) {
 			if (!sw->operator()(words[i])) { // check that the current word *i is not a stopword before adding it to the vector
 				normAcc += pow(termWeight(words[i], documentModifiers[i]), 2);
 			}
 		}
 	}
-	
-	norm = sqrt(normAcc);
+	// std::cout << "=================================================DONE! " << std::endl;
+	norm = std::sqrt(normAcc);
 }
 
 double Document::termWeight(std::string word, double documentFrequencyModifier) {
 	int termCount = (*this)[word];
+	// if (termCount)
+		// std::cout << word << " " << termCount << " " << documentFrequencyModifier << " " << ((1 + log(termCount)) * documentFrequencyModifier) << std::endl;
 	return termCount ? (1 + log(termCount)) * documentFrequencyModifier : 0.0;
 }
 
-double Document::norm() {
+double Document::docNorm() {
 	return norm;
 }

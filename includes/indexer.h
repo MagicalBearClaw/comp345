@@ -1,4 +1,4 @@
-#include "document.h"
+#include "../includes/document.h"
 
 #ifndef INDEXER_H
 #define INDEXER_H

@@ -7,7 +7,7 @@
 #include "../includes/default_tokenizer_strategy.h"
 
 //Remove unused included
-//#include <algorithm>
+#include <algorithm>
 //#include <map>
 #include <assert.h>
 #include <iostream>
@@ -19,7 +19,7 @@
 //#include <iterator>
 //#include <ostream>
 #include <iomanip>
-//#include <cmath>
+#include <cmath>
 
 
 // temporary to use string as stream
@@ -37,8 +37,11 @@ int main()
 	}
 	std::cout << *idx;
 	std::cout << "done" << std::endl;
-	
-	std::vector<double> scores = idx->query("this is a test query?");
+	idx->normalize();
+	std::vector<double> scores = idx->query("on top of each other to form a bigger project");
+	for (auto i = scores.begin(); i != scores.end(); i++) {
+		std::cout << *i << std::endl;
+	}
 
 	//Test this: Add an existing created document object  to the index object
 	//Document *d = new Document("filename");
@@ -140,7 +143,7 @@ int Indexer::size() {
 	//return documentIndex.size();
 }
 
-int calculateDocumentFrequency(std::string word){
+int Indexer::calculateDocumentFrequency(std::string word){
 	int docFrequencyAcc = 0;
 	for(auto iter = documentIndex.begin(); iter != documentIndex.end(); ++iter){
 		docFrequencyAcc += (*iter)[word] ? 1 : 0;
@@ -153,13 +156,13 @@ void Indexer::normalize()
 {
 	int termFrequency = 0;
 	int documentFrequency = 0;
-	double dtModifier 0.0; 
+	double dtModifier = 0.0; 
 	
 	for(auto iter = allWords.begin(); iter != allWords.end(); ++iter){
 		
 		documentFrequency = calculateDocumentFrequency(*iter);
 
-		dtModifier = log(documentCount / documentFrequency);
+		dtModifier = std::log((double)documentCount / (double)documentFrequency);
 		docTermModifiers.push_back(dtModifier);
 		docTermFrequency.push_back(documentFrequency);
 	}
@@ -170,7 +173,7 @@ void Indexer::normalize()
 	normalized = true;
 }
 
-bool isNormalized(Indexer& indexer){
+bool Indexer::isNormalized(Indexer& indexer) {
 	return normalized;
 }
 
@@ -180,8 +183,8 @@ Document Indexer::operator[](int position)
 }
 
 
-std::vector<double> query(std::string queryString) {
-	Document queryDoc();
+std::vector<double> Indexer::query(std::string queryString) {
+	Document queryDoc;
 	default_tokenizer_strategy strat;
 	std::vector<std::string> v = strat.tokenize(queryString);
 	std::vector<std::string> commonWords;
@@ -189,23 +192,30 @@ std::vector<double> query(std::string queryString) {
 	std::vector<double> scores;
 	int position;
 	for (auto i = v.begin(); i != v.end(); ++i) {
-		if (std::find(indexer.allWords.begin(), indexer.allWords.end(), *i) != indexer.allWords.end()) {
-			position = i - indexer.allWords.begin();
+		auto element = std::find(allWords.begin(), allWords.end(), *i);
+		if (element != allWords.end()) {
+			position = element - allWords.begin();
 			queryDoc.indexWord(*i);
 			commonWords.push_back(*i);
 			commonDocTermModifiers.push_back(docTermModifiers[position]);
 		}
 	}
 	queryDoc.normalize(allWords, docTermModifiers);
+
 	double commonModifier;
-	double vectorProductAcc = 0.0;
+	double score;
 	for (auto iDoc = documentIndex.begin(); iDoc != documentIndex.end(); ++iDoc) {
+		double vectorProductAcc = 0.0;
 		for (auto cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
-			position = cWords - commonWords.begin();
+			position = cWord - commonWords.begin();
 			commonModifier = commonDocTermModifiers[position];
-			vectorProductAcc += ((iDoc->termWeight(*word, commonModifier)) * (queryDoc.termWeight(*word, commonModifier));
+			vectorProductAcc += ((iDoc->termWeight(*cWord, commonModifier)) * (queryDoc.termWeight(*cWord, commonModifier)));
 		}
-		scores.push_back(vectorProductAcc / (iDoc->docNorm() * queryDoc.docNorm()));
+		score = vectorProductAcc / (iDoc->docNorm() * queryDoc.docNorm());
+		if (std::isnan(score)) {
+			score = 0;
+		}
+		scores.push_back(score);
 	}
 	return scores;
 }
