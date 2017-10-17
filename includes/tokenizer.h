@@ -2,19 +2,19 @@
 #define TOKENIZER_H
 
 #include <string>
-#include "../includes/I_tokenizer_stratergy.h"
-#include "default_tokenizer_stratergy.h"
+#include "../includes/I_tokenizer_strategy.h"
+#include "default_tokenizer_strategy.h"
 #include <ostream>
 
 
 
 /**
  * The class responsible of breaking up a string of words into tokens.
- * It does so by using a provided tokenizing stratergy. if there is not 
- * a statergy that is provided, a default stratergy will be used.
- * The tokenizer class is responsible of mangining the lifetime of a given stratergy.
- * @see I_tokenizer_stratergy
- * @see default_tokenizer_stratergy
+ * It does so by using a provided tokenizing strategy. if there is not 
+ * a statergy that is provided, a default strategy will be used.
+ * The tokenizer class is responsible of mangining the lifetime of a given strategy.
+ * @see I_tokenizer_strategy
+ * @see default_tokenizer_strategy
  */
 class tokenizer
 {
@@ -30,13 +30,13 @@ public:
 
 	/**
 	* Creates a new instance of tokenizer. 
-	* @param strat The tokenizing stratergy to use. if none specified, the
-	* default stratergy will be used.
-	* @see default_tokenizer_stratergy
+	* @param strat The tokenizing strategy to use. if none specified, the
+	* default strategy will be used.
+	* @see default_tokenizer_strategy
 	*/
-	tokenizer(I_tokenizer_stratergy * strat = new default_tokenizer_stratergy());
+	tokenizer(I_tokenizer_strategy * strat = new default_tokenizer_strategy());
 	/**
-	* Deconstruct the tokenizer instance, freeing the stratergy.
+	* Deconstruct the tokenizer instance, freeing the strategy.
 	*/
 	~tokenizer();
 	/**
@@ -47,12 +47,12 @@ public:
 	std::vector<std::string> tokenize(const std::string& text);
 	/**
 	* Allows to specify a new statergy to be used.
-	* Note: The previous stratergy will be freed.
-	* @param strat The new stratergy to be used to tokenize.
+	* Note: The previous strategy will be freed.
+	* @param strat The new strategy to be used to tokenize.
 	*/
-	void setTokenizerStratergy(I_tokenizer_stratergy * strat);
+	void setTokenizerstrategy(I_tokenizer_strategy * strat);
 private:
-	I_tokenizer_stratergy * stratergy;
+	I_tokenizer_strategy * strategy;
 };
 
 #endif // TOKENIZER_H

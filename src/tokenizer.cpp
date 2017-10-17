@@ -1,13 +1,13 @@
 #include "..\includes\tokenizer.h"
 #include "..\includes\util.h"
 
-tokenizer::tokenizer(I_tokenizer_stratergy * strat) : stratergy(strat)
+tokenizer::tokenizer(I_tokenizer_strategy * strat) : strategy(strat)
 {
 }
 
 tokenizer::~tokenizer()
 {
-	SAFE_DELETE(stratergy)
+	SAFE_DELETE(strategy)
 }
 
 std::vector<std::string> tokenizer::tokenize(const std::string& text) 
@@ -15,24 +15,24 @@ std::vector<std::string> tokenizer::tokenize(const std::string& text)
 	if (text == "")
 		return std::vector<std::string>();
 
-	if(stratergy)
-		return stratergy->tokenize(text);
+	if(strategy)
+		return strategy->tokenize(text);
 
 	return std::vector<std::string>();
 }
 
-void tokenizer::setTokenizerStratergy(I_tokenizer_stratergy * strat)
+void tokenizer::setTokenizerstrategy(I_tokenizer_strategy * strat)
 {
 	if (strat)
-		SAFE_DELETE(stratergy)
+		SAFE_DELETE(strategy)
 
-	this->stratergy = strat;
+	this->strategy = strat;
 }
 
 std::ostream & operator<<(std::ostream & out, const tokenizer & o)
 {
-	if (o.stratergy)
-		return out << "Current stratergy information: @0x" << o.stratergy << std::endl;
+	if (o.strategy)
+		return out << "Current strategy information: @0x" << o.strategy << std::endl;
 
-	return out << "Current stratergy information: There is not a statergy being used (nullptr)."  << std::endl;
+	return out << "Current strategy information: There is not a statergy being used (nullptr)."  << std::endl;
 }

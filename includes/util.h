@@ -25,4 +25,10 @@
  */
 std::string crawlToDelimiter(std::istream &stream, std::string delimiters);
 
+/**
+* This function draws a line of asterisks based on provided length paramater.
+* @param length	The length of the line you wish to draw.
+*
+*/
+void drawLine(const int length);
 #endif

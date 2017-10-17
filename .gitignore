@@ -1,4 +1,4 @@
-.vscode
+**/.vs*
 **/Debug
 **/*.vcxproj*
 **/*.exe

@@ -31,6 +31,7 @@ int main();
 class Indexer {
 	friend std::ifstream & operator>>(std::ifstream &ifs, Indexer &indexer);
 	friend std::ostream & operator<<(std::ostream &ios, Indexer &indexer);
+	friend std::ifstream &operator>>(Document &doc, Indexer &indexer);
 public:
 	/** 
 	 * @brief Default Constructor
@@ -40,9 +41,6 @@ public:
 	Indexer();
     /** @brief Desctructor for Indexer class*/
 	~Indexer();
-	Document* operator[](std::string docName);
-	void createDocument(std::string& name);
-	void addWord(std::string& docName, std::string& word);
 	/**
 	 * @brief returns the number of documents in the index.
 	 *
@@ -68,13 +66,14 @@ public:
 	*
 	* @return Document*	The selected document object as requested by index.
 	*/
-	Document* operator[] (int position);
+	Document operator[] (int position);
 private:
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength;
-	std::map<std::string, Document*> documents;
+	std::vector<Document> documents;
 	std::vector<std::string> words;
 	std::vector<std::string> docNames;
+	std::vector<std::string> allWords;
 	
 	/**
 	* @brief
