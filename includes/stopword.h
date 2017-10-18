@@ -11,8 +11,7 @@
  */
 class StopWord {
   /**
-   *  Operator overload for debug output 
-   * 
+   *  @brief Operator overload for debug output 
    * 
    * 
    * @param stream The output stream to write to
@@ -24,7 +23,7 @@ class StopWord {
 public:
   StopWord(); /**Creates an empty StopWord object*/
   /**
-   *  Creates a StopWord object from a file
+   * @brief Creates a StopWord object from a file
    * 
    * Builds a stopword object based off a file of stopwords
    * ( this file is either a newline or comma delimited list)
@@ -33,7 +32,7 @@ public:
    */
   StopWord(std::string fileName);
   /**
-   *  Checks if a word is a stopword
+   * @brief Checks if a word is a stopword
    * 
    * Operator overload that checks if a specific word is a 
    * stopword
@@ -45,7 +44,6 @@ public:
    */
   bool operator()(std::string word);
 private:
-
   std::vector<std::string> stopWords;/**The list of stopwords*/
 };
 

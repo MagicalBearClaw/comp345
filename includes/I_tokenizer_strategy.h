@@ -10,16 +10,17 @@
  */
 class I_tokenizer_strategy
 {
-public:
+  public:
 	/**
 	* Break up a string of words into a collection of tokens.
 	* @param text The text to be tokenized.
 	* @return std::vector<std::string> a collection of tokens.
 	*/
-    virtual std::vector<std::string> tokenize(const std::string& text) = 0;
+	virtual std::vector<std::string> tokenize(const std::string &text) = 0;
 	/**
-	* Virtual Deconstructor
-	*/
+	 * @brief Deconstructor for all tokenizer strategies which implement this interface.
+	 * 
+	 */
 	virtual ~I_tokenizer_strategy() {}
 };
 

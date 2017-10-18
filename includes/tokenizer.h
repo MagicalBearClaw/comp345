@@ -6,8 +6,6 @@
 #include "default_tokenizer_strategy.h"
 #include <ostream>
 
-
-
 /**
  * The class responsible of breaking up a string of words into tokens.
  * It does so by using a provided tokenizing strategy. if there is not 
@@ -29,6 +27,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const tokenizer& o);
 
 	/**
+	* @brief Copy constructor
 	* Creates a new instance of tokenizer. 
 	* @param strat The tokenizing strategy to use. if none specified, the
 	* default strategy will be used.
