@@ -1,3 +1,2 @@
 resources/file1.txt
 resources/file2.txt
-resources/file3.txt

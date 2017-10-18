@@ -14,7 +14,7 @@
 
 
 Indexer::Indexer()
-  : maxWordLength(0), documentCount(0), normalized(false), maxColumnSize(0)
+  : maxWordLength(0), documentCount(0), normalized(false), maxColumnSize(18)
 {}
 
 Indexer::~Indexer() {}
@@ -77,7 +77,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		return a.size() > b.size();
 	});
 
-	int horizontalLine = (columnCount * (maxColumnLength + 2)) + (maxWordLength + 2) + columnCount + 2;
+	int horizontalLine = ((columnCount + 1) * (maxColumnLength + 2)) + (maxWordLength + 2) + columnCount + 3;
 
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
@@ -90,6 +90,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	{
 		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
 	}
+	std::cout << " * " << std::setw(maxColumnLength) << std::right << "Document Frequency";
 	std::cout << " *" << std::endl;
 
 	//display a hoirzontal line of asterisks
@@ -104,13 +105,15 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		double modifier = indexer.docTermModifiers[it - indexer.allWords.begin()];
+		int position = it - indexer.allWords.begin();
+		double modifier = indexer.docTermModifiers[position];
 		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
 			totals[indx] += (*docs)[*it];
 			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
 			++indx;
 		}
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << indexer.docTermFrequency[position];
 		std::cout << " *" << std::endl;
 	}
 	drawLine(horizontalLine);
@@ -120,6 +123,8 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	{
 		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
 	}
+	
+	std::cout << " * " << std::setw(maxColumnLength) << std::right << " ";
 	std::cout << " *" << std::endl;
 	drawLine(horizontalLine);
 
@@ -136,6 +141,8 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	{
 		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
 	}
+	
+	std::cout << " * " << std::setw(maxColumnLength) << std::right << "Document Frequency";
 	std::cout << " *" << std::endl;
 
 	//display a hoirzontal line of asterisks
@@ -152,13 +159,15 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		double modifier = indexer.docTermModifiers[it - indexer.allWords.begin()];
+		int position = it - indexer.allWords.begin();
+		double modifier = indexer.docTermModifiers[position];
 		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
 			totals[indx] += (*docs)[*it];
 			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
 			++indx;
 		}
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << indexer.docTermFrequency[position];
 		std::cout << " *" << std::endl;
 	}
 	drawLine(horizontalLine);
@@ -168,6 +177,8 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	{
 		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
 	}
+	
+	std::cout << " * " << std::setw(maxColumnLength) << std::right << " ";
 	std::cout << " *" << std::endl;
 	drawLine(horizontalLine);
 	return ios;
