@@ -1,8 +1,10 @@
-#include "../includes/document.h"
+
 
 #ifndef INDEXER_H
 #define INDEXER_H
 
+#include "../includes/document.h"
+#include "../includes/query_result.h"
 // typedef std::map<std::string, int> WordCtr; // find better name
 
 int main();
@@ -18,7 +20,7 @@ int main();
 class Indexer {
 	friend std::ifstream & operator>>(std::ifstream &ifs, Indexer &indexer);
 	friend std::ostream & operator<<(std::ostream &ios, Indexer &indexer);
-	friend std::ifstream &operator>>(Document &doc, Indexer &indexer);
+	friend void operator>>(Document &doc, Indexer &indexer);
 public:
 	/** 
 	 * @brief Default Constructor
@@ -63,7 +65,7 @@ public:
 	 * @return false 
 	 */
 	bool isNormalized(Indexer& indexer);
-	std::vector<double> query(std::string queryString);
+	std::vector<query_result> query(std::string queryString, int numOfResults = 10);
 private:
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength;

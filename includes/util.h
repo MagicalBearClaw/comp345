@@ -1,13 +1,16 @@
-#include <string>
-#include <istream>
-
-
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <string>
+#include <istream>
+#include <vector>
+#include <unordered_map>
+
+
 #define SAFE_DELETE(x)		\
 {							\
-	delete x;				\
+	if(x)                   \
+	  delete x;			    \
 	x = nullptr;			\
 }							\
 
@@ -31,4 +34,8 @@ std::string crawlToDelimiter(std::istream &stream, std::string delimiters);
 *
 */
 void drawLine(const int length);
+
+
+std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words);
+
 #endif

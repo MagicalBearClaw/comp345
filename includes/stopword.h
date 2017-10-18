@@ -20,7 +20,7 @@ class StopWord {
    * 
    * @return std::ostream
    */
-  friend std::ostream operator<<(std::ostream& stream, StopWord& sw);
+  friend std::ostream& operator<<(std::ostream& stream, StopWord& sw);
 public:
   StopWord(); /**Creates an empty StopWord object*/
   /**

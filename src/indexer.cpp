@@ -1,54 +1,44 @@
-// TODO complete the assignment
-// https://moodle.concordia.ca/moodle/pluginfile.php/2916064/mod_resource/content/1/a1.pdf
-// https://moodle.concordia.ca/moodle/pluginfile.php/2933888/mod_resource/content/1/a2.pdf
-
 #include "../includes/indexer.h"
 #include "../includes/util.h"
 #include "../includes/default_tokenizer_strategy.h"
+#include "../includes/tokenizer.h"
 
-//Remove unused included
-#include <algorithm>
-//#include <map>
+
 #include <assert.h>
 #include <iostream>
-//#include <istream>
-//#include <vector>
 #include <string>
-//#include <sstream>
 #include <fstream>
-//#include <iterator>
-//#include <ostream>
 #include <iomanip>
 #include <cmath>
-
+#include <algorithm>
 
 // temporary to use string as stream
 
-int main()
-{
-	//An object idx of class indexer holds the data structures created from the input documents
-	//New creates object on stack and returns a pointer
-	Indexer *idx = new Indexer();
-	std::ifstream ifs("resources/index.txt");
-	assert(ifs.good() && "Invalid file name");
-	while (!ifs.eof())
-	{
-		ifs >> *idx;
-	}
-	std::cout << *idx;
-	std::cout << "done" << std::endl;
-	idx->normalize();
-	std::vector<double> scores = idx->query("on top of each other to form a bigger project");
-	for (auto i = scores.begin(); i != scores.end(); i++) {
-		std::cout << *i << std::endl;
-	}
-
-	//Test this: Add an existing created document object  to the index object
-	//Document *d = new Document("filename");
-	//d >> idx;
-
-	return 0; //All went well.
-}
+//int main()
+//{
+//	//An object idx of class indexer holds the data structures created from the input documents
+//	//New creates object on stack and returns a pointer
+//	Indexer *idx = new Indexer();
+//	std::ifstream ifs("resources/index.txt");
+//	assert(ifs.good() && "Invalid file name");
+//	while (!ifs.eof())
+//	{
+//		ifs >> *idx;
+//	}
+//	std::cout << *idx;
+//	std::cout << "done" << std::endl;
+//	idx->normalize();
+//	std::vector<query_result> ranks = idx->query("on top of each other to form a bigger project");
+//	for (auto i = ranks.begin(); i != ranks.end(); i++) {
+//		std::cout << i->getDocument().name() << i->getRank() << std::endl;
+//	}
+//
+//	//Test this: Add an existing created document object  to the index object
+//	//Document *d = new Document("filename");
+//	//d >> idx;
+//
+//	return 0; //All went well.
+//}
 
 Indexer::Indexer()
   : maxWordLength(0), documentCount(0), normalized(false)
@@ -68,12 +58,15 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
 		Document doc(docName);
 		doc >> indexer; // "stream" document into indexer
 	}
+
+	return ifs;
 }
 
-std::ifstream &operator>>(Document &doc, Indexer &indexer)
+void operator>>(Document &doc, Indexer &indexer)
 {
-	default_tokenizer_strategy strat;
-	std::vector<std::string> v = strat.tokenize(doc.content());
+	default_tokenizer_strategy * strat =  new default_tokenizer_strategy();
+	tokenizer tkzr = tokenizer(strat);
+	std::vector<std::string> v = tkzr.tokenize(doc.content());
 	for (auto i = v.begin(); i != v.end(); ++i) {
 		if (std::find(indexer.allWords.begin(), indexer.allWords.end(), *i) == indexer.allWords.end()) {
 			indexer.allWords.push_back(*i);
@@ -85,8 +78,6 @@ std::ifstream &operator>>(Document &doc, Indexer &indexer)
 	++indexer.documentCount;
 	indexer.normalized = false;
 }
-
-
 
 std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	int maxColumnLength = 10; // change this
@@ -127,7 +118,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	drawLine(horizontalLine);
 
 	// Display totals
-	//std::vector<int> totals = calculatTotalWordCounts(words, docs.size());
+	//std::vector<int> totals = calculatTotalWordCounts(words, indexer.documentIndex.size());
 	//std::cout << "* " << std::left << std::setw(maxWordLength) << "total";
 	//for (auto it = totals.begin(); it != totals.end(); ++it)
 	//{
@@ -136,6 +127,8 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	//std::cout << " *" << std::endl;
 	////display a hoirzontal line of asterisks
 	//drawLine(horizontalLine);
+
+	return ios;
 }
 
 int Indexer::size() {
@@ -183,13 +176,15 @@ Document Indexer::operator[](int position)
 }
 
 
-std::vector<double> Indexer::query(std::string queryString) {
+std::vector<query_result> Indexer::query(std::string queryString, int numOfResults) {
+
+	std::vector<query_result> results;
 	Document queryDoc;
-	default_tokenizer_strategy strat;
-	std::vector<std::string> v = strat.tokenize(queryString);
+	default_tokenizer_strategy * strat = new default_tokenizer_strategy();
+	tokenizer tkzr = tokenizer(strat);
+	std::vector<std::string> v = tkzr.tokenize(queryString);
 	std::vector<std::string> commonWords;
 	std::vector<double> commonDocTermModifiers;
-	std::vector<double> scores;
 	int position;
 	for (auto i = v.begin(); i != v.end(); ++i) {
 		auto element = std::find(allWords.begin(), allWords.end(), *i);
@@ -205,6 +200,7 @@ std::vector<double> Indexer::query(std::string queryString) {
 	double commonModifier;
 	double score;
 	for (auto iDoc = documentIndex.begin(); iDoc != documentIndex.end(); ++iDoc) {
+
 		double vectorProductAcc = 0.0;
 		for (auto cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
 			position = cWord - commonWords.begin();
@@ -215,7 +211,54 @@ std::vector<double> Indexer::query(std::string queryString) {
 		if (std::isnan(score)) {
 			score = 0;
 		}
-		scores.push_back(score);
+		results.push_back(query_result(*iDoc, score));
 	}
-	return scores;
+	int reultCap = numOfResults;
+	if (numOfResults > results.size())
+		reultCap = results.size();
+
+	results.erase(results.begin() + reultCap, results.end());
+	return results;
+}
+
+//void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName)
+//{
+//	std::ifstream file(fileName.c_str());
+//	std::string line;
+//	if (!file.is_open())
+//	{
+//		std::cout << "Failed to open file: " << fileName << std::endl;
+//		std::exit(-1);
+//	}
+//
+//	while (std::getline(file, line))
+//	{
+//		words.erase(line);
+//	}
+//}
+
+void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords)
+{
+	size_t current;
+	std::string delimiters = " ,-':!().?\";—~{}/*\n";
+	size_t next = -1;
+	int index = 0;
+	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
+	{
+		do
+		{
+			current = next + 1;
+			std::string doc = *it;
+			next = doc.find_first_of(delimiters, current);
+			std::string currentword = doc.substr(current, next - current);
+			std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
+			if (currentword != "")
+			{
+				std::vector<int> counts = processedWords[currentword];
+				counts[index] = counts[index] + 1;
+				processedWords[currentword] = counts;
+			}
+		} while (next != std::string::npos);
+		++index;
+	}
 }

@@ -27,3 +27,17 @@ void drawLine(const int length) {
 		std::cout << "*";
 	std::cout << std::endl;
 }
+
+
+std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words)
+{
+	std::vector<std::string> vecOfWords;
+
+	for (auto it = words.begin(); it != words.end(); ++it)
+	{
+		vecOfWords.emplace_back(it->first);
+	}
+	std::sort(vecOfWords.begin(), vecOfWords.end());
+
+	return vecOfWords;
+}

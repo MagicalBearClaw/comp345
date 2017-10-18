@@ -25,7 +25,7 @@ class Document {
    * 
    * @return std::ostream
    */
-  friend std::ostream operator<<(std::ostream& stream, Document& doc);
+  friend std::ostream& operator<<(std::ostream& stream, Document& doc);
 public:
   Document(); /**Constructor to create empty document*/
   /**
