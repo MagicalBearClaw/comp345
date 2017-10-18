@@ -64,6 +64,7 @@ public:
 private:
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength;
+	int maxColumnSize;
 	bool normalized; /** Status check if the index has been normalized*/
 	std::vector<Document> documentIndex;
 	std::vector<std::string> docNames;
