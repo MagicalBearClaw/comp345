@@ -17,6 +17,9 @@ public:
 	* @return std::vector<std::string> a collection of tokens.
 	*/
     virtual std::vector<std::string> tokenize(const std::string& text) = 0;
+	/**
+	* Virtual Deconstructor
+	*/
 	virtual ~I_tokenizer_strategy() {}
 };
 

@@ -6,7 +6,9 @@
 #include <vector>
 #include <unordered_map>
 
-
+/**
+* @brief Macro to safely delete a pointer.
+*/
 #define SAFE_DELETE(x)		\
 {							\
 	if(x)                   \
@@ -34,8 +36,5 @@ std::string crawlToDelimiter(std::istream &stream, std::string delimiters);
 *
 */
 void drawLine(const int length);
-
-
-std::vector<std::string> mapToVector(std::unordered_map<std::string, std::vector<int>>& words);
 
 #endif

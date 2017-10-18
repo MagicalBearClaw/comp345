@@ -16,7 +16,7 @@
  */
 class Document {
   /**
-   * @brief Operator overload for debug output 
+   * Operator overload for debug output 
    * 
    * Outputs the file name, size, and content
    * 
@@ -29,7 +29,7 @@ class Document {
 public:
   Document(); /**Constructor to create empty document*/
   /**
-   * @brief Constructor for creating a documet based on an existing file name.
+   * Constructor for creating a documet based on an existing file name.
    * 
    * This constructor will cause the application to terminate if it is given
    * a non existant file name.
@@ -39,7 +39,7 @@ public:
   Document(std::string fileName);
   ~Document();/**Destructor for document class (does nothing so far)*/
   /**
-   * @brief Gets name of document
+   * Gets name of document
    * 
    * Gets the name of the file the document is based on what was input in the
    * constructor. If no parameter constructor is used the name will be "unnamed document"
@@ -48,7 +48,7 @@ public:
    */
   std::string name();
   /**
-   * @brief Gets the size of the document
+   * Gets the size of the document
    * 
    * Gets the size of the contents of the document based on character count
    * 
@@ -61,14 +61,14 @@ public:
   
   void normalize(const std::vector<std::string>& words, const std::vector<double> documentModifiers, StopWord* sw = nullptr);
   /**
-   * @brief Gets the contents of the document
+   * Gets the contents of the document
    * 
    * @return std::string the contents of the document
    */
   std::string content();
   void indexWord(std::string word);
   /**
-   * @brief Returns the word count for a specific word
+   * Returns the word count for a specific word
    * 
    * @param word 
    * @return int 

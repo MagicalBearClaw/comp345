@@ -14,31 +14,21 @@
 
 // temporary to use string as stream
 
-//int main()
-//{
-//	//An object idx of class indexer holds the data structures created from the input documents
-//	//New creates object on stack and returns a pointer
-//	Indexer *idx = new Indexer();
-//	std::ifstream ifs("resources/index.txt");
-//	assert(ifs.good() && "Invalid file name");
-//	while (!ifs.eof())
-//	{
-//		ifs >> *idx;
-//	}
-//	std::cout << *idx;
-//	std::cout << "done" << std::endl;
-//	idx->normalize();
-//	std::vector<query_result> ranks = idx->query("on top of each other to form a bigger project");
-//	for (auto i = ranks.begin(); i != ranks.end(); i++) {
-//		std::cout << i->getDocument().name() << i->getRank() << std::endl;
-//	}
-//
-//	//Test this: Add an existing created document object  to the index object
-//	//Document *d = new Document("filename");
-//	//d >> idx;
-//
-//	return 0; //All went well.
-//}
+int main()
+{
+	//An object idx of class indexer holds the data structures created from the input documents
+	//New creates object on stack and returns a pointer
+	Indexer *idx = new Indexer();
+	std::ifstream ifs("resources/index.txt");
+	assert(ifs.good() && "Invalid file name");
+	while (!ifs.eof())
+	{
+		ifs >> *idx;
+	}
+	std::cout << *idx;
+
+	return 0; //All went well.
+}
 
 Indexer::Indexer()
   : maxWordLength(0), documentCount(0), normalized(false)
@@ -84,7 +74,23 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	int maxWordLength = 20; // change this too
 	std::string title = "dictionary"; // change this as well
 	int columnCount = indexer.documentCount;
+
+	if (columnCount == 0)
+		return ios;
+
+	std::sort(indexer.docNames.begin(), indexer.docNames.end(), [](const std::string& a, const std::string& b)
+	{
+		return a.size() > b.size();
+	});
+	maxColumnLength = indexer.docNames[0].size();
+	std::sort(indexer.allWords.begin(), indexer.allWords.end(), [](const std::string& a, const std::string& b)
+	{
+		return a.size() > b.size();
+	});
+
+	maxWordLength = indexer.allWords[0].size();
 	int horizontalLine = (columnCount * (maxColumnLength + 2)) + (maxWordLength + 2) + columnCount + 2;
+	std::sort(indexer.allWords.begin(), indexer.allWords.end());
 
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
@@ -102,32 +108,79 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
 
+	std::vector<int> totals;
+	totals.resize(columnCount);
+
 	//main table display
 	for (auto it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
 	{
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
+		int indx = 0;
 		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
+			totals[indx] += (*docs)[*it];
 			std::cout << " * " << std::right << std::setw(maxColumnLength) << (*docs)[*it];
+			++indx;
 		}
 		std::cout << " *" << std::endl;
 	}
+	drawLine(horizontalLine);
+	// Display totals
+	std::cout << "* " << std::left << std::setw(maxWordLength) << "Total: ";
+	for (auto it = totals.begin(); it != totals.end(); ++it)
+	{
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
+	}
+	std::cout << " *" << std::endl;
+	drawLine(horizontalLine);
 
+
+	std::cout << std::endl << "Without stopwords" << std::endl << std::endl;
 	//display a hoirzontal line of asterisks
 	drawLine(horizontalLine);
 
-	// Display totals
-	//std::vector<int> totals = calculatTotalWordCounts(words, indexer.documentIndex.size());
-	//std::cout << "* " << std::left << std::setw(maxWordLength) << "total";
-	//for (auto it = totals.begin(); it != totals.end(); ++it)
-	//{
-	//	std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
-	//}
-	//std::cout << " *" << std::endl;
-	////display a hoirzontal line of asterisks
-	//drawLine(horizontalLine);
+	//display a header line including the word dictionary and the list of document names
+	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
+	//Loop to display all file names seperated by an asterisk
+	for (auto it = indexer.documentIndex.begin(); it != indexer.documentIndex.end(); ++it)
+	{
+		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
+	}
+	std::cout << " *" << std::endl;
+
+	//display a hoirzontal line of asterisks
+	drawLine(horizontalLine);
+	totals.clear();
+	totals.resize(columnCount);
+	StopWord sw = StopWord("resources/stopwords.txt");
+
+	//main table display
+	for (auto it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
+	{
+		if (sw(*it))
+			continue;
+		std::string currentWord = *it;
+		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
+		int indx = 0;
+		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
+		{
+			totals[indx] += (*docs)[*it];
+			std::cout << " * " << std::right << std::setw(maxColumnLength) << (*docs)[*it];
+			++indx;
+		}
+		std::cout << " *" << std::endl;
+	}
+	drawLine(horizontalLine);
+	// Display totals
+	std::cout << "* " << std::left << std::setw(maxWordLength) << "Total: ";
+	for (auto it = totals.begin(); it != totals.end(); ++it)
+	{
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
+	}
+	std::cout << " *" << std::endl;
+	drawLine(horizontalLine);
 	return ios;
 }
 
@@ -221,44 +274,4 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 	return results;
 }
 
-//void removeStopWOrds(std::unordered_map<std::string, std::vector<int>>& words, std::string fileName)
-//{
-//	std::ifstream file(fileName.c_str());
-//	std::string line;
-//	if (!file.is_open())
-//	{
-//		std::cout << "Failed to open file: " << fileName << std::endl;
-//		std::exit(-1);
-//	}
-//
-//	while (std::getline(file, line))
-//	{
-//		words.erase(line);
-//	}
-//}
 
-void calculateDocs(const std::vector<std::string>& docs, std::unordered_map<std::string, std::vector<int>>& processedWords)
-{
-	size_t current;
-	std::string delimiters = " ,-':!().?\";—~{}/*\n";
-	size_t next = -1;
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = docs.begin(); it != docs.end(); ++it)
-	{
-		do
-		{
-			current = next + 1;
-			std::string doc = *it;
-			next = doc.find_first_of(delimiters, current);
-			std::string currentword = doc.substr(current, next - current);
-			std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
-			if (currentword != "")
-			{
-				std::vector<int> counts = processedWords[currentword];
-				counts[index] = counts[index] + 1;
-				processedWords[currentword] = counts;
-			}
-		} while (next != std::string::npos);
-		++index;
-	}
-}

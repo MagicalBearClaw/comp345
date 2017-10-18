@@ -3,6 +3,11 @@
 
 #include "../includes/document.h"
 
+/**
+* The query_result class is responsible to keep the state of its ranks
+* as well as the document that the query apears in.
+*
+*/
 class query_result 
 {
 public:
