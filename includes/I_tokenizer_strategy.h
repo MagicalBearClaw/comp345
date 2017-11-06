@@ -5,9 +5,10 @@
 #include <vector>
 
 /**
- * This interface is responsible for providing a statergy to break text
+ * This interface is responsible for providing a stategy to break text
  * into tokens.
  */
+//TODO this should instead be changed to ABS Abstract_Tokenizer
 class I_tokenizer_strategy
 {
   public:

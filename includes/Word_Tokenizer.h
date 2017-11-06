@@ -1,0 +1,6 @@
+#ifndef WORD_TOKENIZER_H
+#define WORD_TOKENIZER_H
+
+//
+
+#endif //WORD_TOKENIZER_H
