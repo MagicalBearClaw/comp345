@@ -36,10 +36,10 @@ std::string Document::name() const {
 }
 
 
-int Document::size() {
+int Document::size() const {
   return fileContent.length();
 }
 
-std::string Document::content() {
+std::string Document::content() const {
   return fileContent;
 }

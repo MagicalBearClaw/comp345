@@ -22,9 +22,9 @@ class Index_item
     friend std::ostream& operator<<(std::ostream& ostream, Index_item& indexItem);
   public:
 
-    virtual std::string content() = 0;
-    virtual std::string name() = 0;
-    virtual int size() = 0;
+    virtual std::string content() const = 0;
+    virtual std::string name() const = 0;
+    virtual int size() const = 0;
 
     /**
      * @brief Deconstructor for all classes which implement this abstract base class.

@@ -47,7 +47,7 @@ public:
    * 
    * @return std::string the name of the document
    */
-  std::string name() const;
+  std::string name() const override;
   /**
    * Gets the size of the document
    * 
@@ -55,13 +55,13 @@ public:
    * 
    * @return int The number of characters in the document
    */
-  int size();
+  int size() const override;
   /**
    * Gets the contents of the document
    * 
    * @return std::string the contents of the document
    */
-  std::string content();
+  std::string content() const override;
 
 private:
   std::string fileName;    /**The name of the document*/

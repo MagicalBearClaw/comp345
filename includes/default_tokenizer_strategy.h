@@ -18,7 +18,7 @@ class default_tokenizer_strategy : public I_tokenizer_strategy
 	* defaults to the set of punction characters.
 	* i.e  ,\t-':!().?\";–—~{}/*\n\t\r
 	*/
-	default_tokenizer_strategy(const std::string &delimiters = ".?!");
+	default_tokenizer_strategy(const std::string &delimiters = " ,\t-':!().?\";–—~{}/*\n\t\r");
 
 	/**
 	* Breaks up a string into tokens.

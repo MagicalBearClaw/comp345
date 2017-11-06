@@ -8,7 +8,7 @@
 
 class SentenceTokenizerStrategy : public I_tokenizer_strategy {
 public:
-  SentenceTokenizerStrategy(std::vector<std::string> abr, const std::string &delimiters = " ,\t-':!().?\";–—~{}/*\n\t\r");
+  SentenceTokenizerStrategy(std::vector<std::string> abr, const std::string &delimiters = ".?!");
   virtual ~SentenceTokenizerStrategy();
   virtual std::vector<std::string> tokenize(const std::string &text);
 private:

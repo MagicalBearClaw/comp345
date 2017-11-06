@@ -11,20 +11,16 @@ std::vector<std::string> default_tokenizer_strategy::tokenize(const std::string 
 	size_t current = 0;
 	size_t next = -1;
 	std::vector<std::string> words;
-	std::string currentsentence = "";
 	do
 	{
 		current = next + 1;
-		next = text.find_first_of(this->delimiters, current); // go until sentence terminating punctuation is reached
-		currentsentence += text.substr(current, next - current);
-		std::transform(currentsentence.begin(), currentsentence.end(), currentsentence.begin(), tolower);
-		std::string lastWord = currentsentence.substr(currentsentence.find_last_of(" \t"), currentsentence.length - 1);
-		if (std::find(abreviations.begin(), abreviations.end(), lastWord)) 
-		
-		if (currentsentence == "")
+		next = text.find_first_of(this->delimiters, current);
+		std::string currentword = text.substr(current, next - current);
+		std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
+		if (currentword == "")
 			continue;
 
-		words.push_back(currentsentence);
+		words.push_back(currentword);
 
 	} while (next != std::string::npos);
 
