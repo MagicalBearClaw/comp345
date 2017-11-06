@@ -1,7 +1,7 @@
 OUTDIR = bin
 SRC = src
 INCLUDES = includes
-OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o
+OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o $(OUTDIR)\term_index.o
 CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
@@ -43,3 +43,6 @@ $(OUTDIR)\app.o : $(SRC)\app.cpp $(INCLUDES)\app.h
 
 $(OUTDIR)\query_result.o : $(SRC)\query_result.cpp $(INCLUDES)\query_result.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\query_result.cpp -o $(OUTDIR)\query_result.o
+
+$(OUTDIR)\term_index.o : $(SRC)\term_index.cpp $(INCLUDES)\term_index.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\term_index.cpp -o $(OUTDIR)\term_index.o

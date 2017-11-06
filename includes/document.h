@@ -45,7 +45,7 @@ public:
    * 
    * @return std::string the name of the document
    */
-  std::string name();
+  std::string name() const;
   /**
    * Gets the size of the document
    * 
@@ -55,61 +55,15 @@ public:
    */
   int size();
   /**
-   * @brief Returns the termweight of the specific word with respect to the documentModifier
-   * 
-   * the tf-idf weight of a term t in a document d is defined as:
-   *      termWeight = (1 + log termFrequency) * documentModifier
-   *      documentModifier = log(N/documentFrequency)
-   * 
-   * @param word the word for which to calculate the termweight
-   * @param documentModifier the documentModifier log(N/DF) to use in calculation
-   * @return double The term weight of the provided work
-   */
-  double termWeight(std::string word, double documentModifier);
-
-  /**
-   * @brief accesor method to return the norm of the document instance
-   * 
-   * @return double the norm of the document
-   */
-  double docNorm();
-
-  /**
-   * @brief This method performs and stores the normal of this document vector
-   * 
-   * Based on the words and modifiers provided from the indexer each document can caluclate
-   * and store its own norm.
-   * 
-   * @param words The vector of all words
-   * @param documentModifiers the vector of documentModifiers for all words
-   * @param nullptr StopWords object, defaulted to nullptr if not used
-   */
-  void normalize(const std::vector<std::string> &words, const std::vector<double> documentModifiers, StopWord *sw = nullptr);
-  /**
    * Gets the contents of the document
    * 
    * @return std::string the contents of the document
    */
   std::string content();
-  /**
-   * @brief adds a non existing word or increments its count if it exsists
-   * 
-   * @param word the word to add/increment within the document
-   */
-  void indexWord(std::string word);
-  /**
-   * Returns the word count for a specific word
-   * 
-   * @param word term for which to request a count
-   * @return int word count of the specified word
-   */
-  int operator[](std::string word);
 
 private:
   std::string fileName;    /**The name of the document*/
   std::string fileContent; /**The contents of the document*/
-  std::map<std::string, int> dictionary;
-  double norm;
 };
 
 #endif

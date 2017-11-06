@@ -3,6 +3,7 @@
 
 #include "../includes/document.h"
 #include "../includes/query_result.h"
+#include "../includes/term_index.h"
 
 int main();
 
@@ -101,12 +102,12 @@ private:
 	int maxWordLength; /**Ctr used for display of word column*/
 	int maxColumnSize; /**ctr used for display of count columns*/
 	bool normalized; /** Status check if the index has been normalized*/
-	std::vector<Document> documentIndex; /** vector of all documents*/
+	std::vector<Document> documents; /** vector of all documents*/
 	std::vector<std::string> docNames; /** vector of all document names*/
 	std::vector<std::string> allWords; //**all words in the index*/
 	std::vector<double> docTermModifiers; /**log(documnetCount/documentFrequency)*/
 	std::vector<int> docTermFrequency; /**how many documents contain the word*/
-
+	std::vector<TermIndex> documentIndices;
 	/**
 	 * @brief the document frequency dft for a term t is defined as the number of documents that t appears in
 	 * 

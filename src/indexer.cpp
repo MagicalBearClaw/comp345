@@ -40,22 +40,24 @@ void operator>>(Document &doc, Indexer &indexer)
 {
 	default_tokenizer_strategy * strat =  new default_tokenizer_strategy();
 	tokenizer tkzr = tokenizer(strat);
+	TermIndex tIdx;
 	std::vector<std::string> v = tkzr.tokenize(doc.content());
-	for (auto i = v.begin(); i != v.end(); ++i) {
+	for (std::vector<std::string>::const_iterator i = v.begin(); i != v.end(); ++i) {
 		if (std::find(indexer.allWords.begin(), indexer.allWords.end(), *i) == indexer.allWords.end()) {
 			if(i->length() > indexer.maxWordLength) {
 				indexer.maxWordLength = i->length();
 			}
 			indexer.allWords.push_back(*i);
 		}
-		doc.indexWord(*i);
+		tIdx.indexWord(*i);
 		// check if word count size is bigger than half the column
-		if (std::to_string(doc[*i]).length() > indexer.maxColumnSize / 2 + indexer.maxColumnSize % 2 + 1) {
-			indexer.maxColumnSize = std::to_string(doc[*i]).length() * 2 + 2;
+		if (std::to_string(tIdx[*i]).length() > indexer.maxColumnSize / 2 + indexer.maxColumnSize % 2 + 1) {
+			indexer.maxColumnSize = std::to_string(tIdx[*i]).length() * 2 + 2;
 		}
 	}
-	indexer.documentIndex.push_back(doc);
+	indexer.documents.push_back(doc);
 	indexer.docNames.push_back(doc.name());
+	indexer.documentIndices.push_back(tIdx);
 	++indexer.documentCount;
 	indexer.normalized = false;
 }
@@ -64,9 +66,9 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	if (!indexer.normalized) {
 		indexer.normalize();
 	}
-	int maxColumnLength = indexer.maxColumnSize; // change this
-	int maxWordLength = indexer.maxWordLength; // change this too
-	std::string title = "dictionary"; // change this as well
+	int maxColumnLength = indexer.maxColumnSize;
+	int maxWordLength = indexer.maxWordLength;
+	std::string title = "dictionary";
 	int columnCount = indexer.documentCount;
 
 	if (columnCount == 0)
@@ -86,7 +88,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
 	//Loop to display all file names seperated by an asterisk
-	for (auto it = indexer.documentIndex.begin(); it != indexer.documentIndex.end(); ++it)
+	for (std::vector<Document>::const_iterator it = indexer.documents.begin(); it != indexer.documents.end(); ++it)
 	{
 		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
 	}
@@ -100,14 +102,14 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	totals.resize(columnCount);
 
 	//main table display
-	for (auto it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
+	for (std::vector<std::string>::const_iterator it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
 	{
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
 		int position = it - indexer.allWords.begin();
 		double modifier = indexer.docTermModifiers[position];
-		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
+		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
 		{
 			totals[indx] += (*docs)[*it];
 			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
@@ -137,7 +139,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
 	//Loop to display all file names seperated by an asterisk
-	for (auto it = indexer.documentIndex.begin(); it != indexer.documentIndex.end(); ++it)
+	for (auto it = indexer.documents.begin(); it != indexer.documents.end(); ++it)
 	{
 		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
 	}
@@ -161,7 +163,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		int indx = 0;
 		int position = it - indexer.allWords.begin();
 		double modifier = indexer.docTermModifiers[position];
-		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
+		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
 		{
 			totals[indx] += (*docs)[*it];
 			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
@@ -191,7 +193,7 @@ int Indexer::size() {
 
 int Indexer::calculateDocumentFrequency(std::string word){
 	int docFrequencyAcc = 0;
-	for(auto iter = documentIndex.begin(); iter != documentIndex.end(); ++iter){
+	for(std::vector<TermIndex>::iterator iter = documentIndices.begin(); iter != documentIndices.end(); ++iter){
 		docFrequencyAcc += (*iter)[word] ? 1 : 0;
 	}
 
@@ -204,7 +206,7 @@ void Indexer::normalize()
 	int documentFrequency = 0;
 	double dtModifier = 0.0; 
 	
-	for(auto iter = allWords.begin(); iter != allWords.end(); ++iter) {
+	for(std::vector<std::string>::const_iterator iter = allWords.begin(); iter != allWords.end(); ++iter) {
 		
 		documentFrequency = calculateDocumentFrequency(*iter);
 
@@ -214,9 +216,9 @@ void Indexer::normalize()
 	}
 	double weight;
 	int maxAcc;
-	for (auto iter = documentIndex.begin(); iter != documentIndex.end(); ++iter) {
+	for (std::vector<TermIndex>::iterator iter = documentIndices.begin(); iter != documentIndices.end(); ++iter) {
 		iter->normalize(allWords, docTermModifiers);
-		// verify that column size values are not suppased
+		// verify that column size values are not suppased (this is for rendering the table later on)
 		maxAcc = 0;
 		for (auto word = allWords.begin(); word != allWords.end(); ++word) {
 			maxAcc += (*iter)[*word];
@@ -238,21 +240,21 @@ bool Indexer::isNormalized(Indexer& indexer) {
 
 Document Indexer::operator[](int position)
 {
-	return documentIndex[position];
+	return documents[position];
 }
 
 
 std::vector<query_result> Indexer::query(std::string queryString, int numOfResults) {
 
 	std::vector<query_result> results;
-	Document queryDoc;
+	TermIndex queryDoc;
 	default_tokenizer_strategy * strat = new default_tokenizer_strategy();
 	tokenizer tkzr = tokenizer(strat);
-	std::vector<std::string> v = tkzr.tokenize(queryString);
+	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
 	std::vector<std::string> commonWords;
 	std::vector<double> commonDocTermModifiers;
 	int position;
-	for (auto i = v.begin(); i != v.end(); ++i) {
+	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
 		auto element = std::find(allWords.begin(), allWords.end(), *i);
 		if (element != allWords.end()) {
 			position = element - allWords.begin();
@@ -265,10 +267,11 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 
 	double commonModifier;
 	double score;
-	for (auto iDoc = documentIndex.begin(); iDoc != documentIndex.end(); ++iDoc) {
-
+	for (std::vector<TermIndex>::iterator iDoc = documentIndices.begin(); iDoc != documentIndices.end(); ++iDoc) {
+		// get the document that matches the documentIndex position
+		Document doc = documents[iDoc - documentIndices.begin()];
 		double vectorProductAcc = 0.0;
-		for (auto cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
+		for (std::vector<std::string>::const_iterator cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
 			position = cWord - commonWords.begin();
 			commonModifier = commonDocTermModifiers[position];
 			vectorProductAcc += ((iDoc->termWeight(*cWord, commonModifier)) * (queryDoc.termWeight(*cWord, commonModifier)));
@@ -277,7 +280,7 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 		if (std::isnan(score)) {
 			score = 0;
 		}
-		results.push_back(query_result(*iDoc, score));
+		results.push_back(query_result(doc, score));
 	}
 	int reultCap = numOfResults;
 	if (numOfResults > results.size())
