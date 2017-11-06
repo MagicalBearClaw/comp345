@@ -11,6 +11,7 @@ int main();
  * The Indexer class is responsible for storing and maintaining a document index.
  *
  */
+//TODO this should now become an abstract base class
 class Indexer
 {
 	/**

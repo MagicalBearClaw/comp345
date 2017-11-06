@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
+#include <iterator>
 
 
 Indexer::Indexer()
@@ -102,12 +103,12 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	totals.resize(columnCount);
 
 	//main table display
-	for (std::vector<std::string>::const_iterator it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
+	for (std::vector<std::string>::iterator it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
 	{
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		int position = it - indexer.allWords.begin();
+		int position = std::distance(indexer.allWords.begin(), it);
 		double modifier = indexer.docTermModifiers[position];
 		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
 		{
@@ -161,7 +162,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		int position = it - indexer.allWords.begin();
+		int position = std::distance(indexer.allWords.begin(), it);
 		double modifier = indexer.docTermModifiers[position];
 		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
 		{
@@ -257,7 +258,7 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
 		auto element = std::find(allWords.begin(), allWords.end(), *i);
 		if (element != allWords.end()) {
-			position = element - allWords.begin();
+			position = std::distance(allWords.begin(),element);
 			queryDoc.indexWord(*i);
 			commonWords.push_back(*i);
 			commonDocTermModifiers.push_back(docTermModifiers[position]);

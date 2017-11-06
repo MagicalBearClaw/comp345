@@ -2,7 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include <assert.h>
+#include <cassert>
 
 #include "../includes/app.h"
 #include "../includes/indexer.h"

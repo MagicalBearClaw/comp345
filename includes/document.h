@@ -7,13 +7,15 @@
 #include <vector>
 
 #include "..\includes\stopword.h"
+//TODO not sure if this should be here or not?
+#include "../includes/Index_item.h"
 
 /**
  * Class used to store the contents of a file.
  * This class also can be used to fetch additional metadata about the 
  * file such as the name and the size (in characters) of the file.
  */
-class Document {
+class Document : Index_item {
   /**
    * Operator overload for debug output 
    * 
