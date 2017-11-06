@@ -11,6 +11,7 @@
 #include <iomanip>
 #include <cmath>
 #include <algorithm>
+#include <iterator>
 
 
 Indexer::Indexer()
@@ -105,7 +106,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		int position = it - indexer.allWords.begin();
+		int position = std::distance(indexer.allWords.begin(), it);
 		double modifier = indexer.docTermModifiers[position];
 		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
@@ -159,7 +160,7 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 		std::string currentWord = *it;
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		int position = it - indexer.allWords.begin();
+		int position = std::distance(indexer.allWords.begin(), it);
 		double modifier = indexer.docTermModifiers[position];
 		for (auto docs = indexer.documentIndex.begin(); docs != indexer.documentIndex.end(); ++docs)
 		{
@@ -255,7 +256,7 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 	for (auto i = v.begin(); i != v.end(); ++i) {
 		auto element = std::find(allWords.begin(), allWords.end(), *i);
 		if (element != allWords.end()) {
-			position = element - allWords.begin();
+			position = std::distance(allWords.begin(),element);
 			queryDoc.indexWord(*i);
 			commonWords.push_back(*i);
 			commonDocTermModifiers.push_back(docTermModifiers[position]);
@@ -269,7 +270,7 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 
 		double vectorProductAcc = 0.0;
 		for (auto cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
-			position = cWord - commonWords.begin();
+			position = std::distance(commonWords.begin(),cWord);
 			commonModifier = commonDocTermModifiers[position];
 			vectorProductAcc += ((iDoc->termWeight(*cWord, commonModifier)) * (queryDoc.termWeight(*cWord, commonModifier)));
 		}
