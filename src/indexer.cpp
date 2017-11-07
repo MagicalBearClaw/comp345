@@ -20,23 +20,8 @@ Indexer::Indexer()
 
 Indexer::~Indexer() {}
 
-std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
-{
-	while (!ifs.eof()) {
-		std::string docName = crawlToDelimiter(ifs, "\n");
-		if (docName.empty()) {
-			continue;
-		}
-		if (indexer.maxColumnSize < docName.length()) {
-			indexer.maxColumnSize = docName.length();
-		}
-		Document doc(docName);
-		doc >> indexer; // "stream" document into indexer
-	}
 
-	return ifs;
-}
-
+// override
 void operator>>(Document &doc, Indexer &indexer)
 {
 	default_tokenizer_strategy * strat =  new default_tokenizer_strategy();
@@ -44,11 +29,15 @@ void operator>>(Document &doc, Indexer &indexer)
 	TermIndex tIdx;
 	std::vector<std::string> v = tkzr.tokenize(doc.content());
 	for (std::vector<std::string>::const_iterator i = v.begin(); i != v.end(); ++i) {
-		if (std::find(indexer.allWords.begin(), indexer.allWords.end(), *i) == indexer.allWords.end()) {
+
+		//find_if(table.begin(), table.end(), [&new_id](const entry &arg) { 
+			//return arg.first == new_id; }) !=
+		if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const Indexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; })) {
 			if(i->length() > indexer.maxWordLength) {
 				indexer.maxWordLength = i->length();
 			}
-			indexer.allWords.push_back(*i);
+			indexer.wftms.push_back(make_tuple(*i, 0, 0)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+			// indexer.allWords.push_back(*i);
 		}
 		tIdx.indexWord(*i);
 		// check if word count size is bigger than half the column
@@ -56,13 +45,14 @@ void operator>>(Document &doc, Indexer &indexer)
 			indexer.maxColumnSize = std::to_string(tIdx[*i]).length() * 2 + 2;
 		}
 	}
-	indexer.documents.push_back(doc);
-	indexer.docNames.push_back(doc.name());
-	indexer.documentIndices.push_back(tIdx);
+	indexer.itis.push_back(std::make_tuple(&doc, tIdx)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+	// indexer.documents.push_back(doc);
+	indexer.docNames.push_back(doc.name()); // remove me 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+	// indexer.documentIndices.push_back(tIdx);
 	++indexer.documentCount;
 	indexer.normalized = false;
 }
-
+// dont care for now
 std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	if (!indexer.normalized) {
 		indexer.normalize();
@@ -186,12 +176,12 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	drawLine(horizontalLine);
 	return ios;
 }
-
+// same functionality
 int Indexer::size() {
 	return documentCount;
 	//return documentIndex.size();
 }
-
+// same functionality, better name (term index frequency)
 int Indexer::calculateDocumentFrequency(std::string word){
 	int docFrequencyAcc = 0;
 	for(std::vector<TermIndex>::iterator iter = documentIndices.begin(); iter != documentIndices.end(); ++iter){
@@ -201,6 +191,7 @@ int Indexer::calculateDocumentFrequency(std::string word){
 	return docFrequencyAcc;
 }
 // A function normalize() computes the tf-idf weights based on the number N of indexed documents.
+// can be implemented on base class
 void Indexer::normalize()
 {
 	int termFrequency = 0;
@@ -234,17 +225,17 @@ void Indexer::normalize()
 	}
 	normalized = true;
 }
-
+// same functionality
 bool Indexer::isNormalized(Indexer& indexer) {
 	return normalized;
 }
-
+// same functionality (index item*)
 Document Indexer::operator[](int position)
 {
 	return documents[position];
 }
 
-
+// override (pure virtual)
 std::vector<query_result> Indexer::query(std::string queryString, int numOfResults) {
 
 	std::vector<query_result> results;
@@ -281,7 +272,7 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 		if (std::isnan(score)) {
 			score = 0;
 		}
-		results.push_back(query_result(doc, score));
+		results.push_back(query_result(&doc, score));
 	}
 	int reultCap = numOfResults;
 	if (numOfResults > results.size())

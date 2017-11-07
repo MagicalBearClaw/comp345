@@ -5,7 +5,7 @@ query_result::query_result(Index_item idxItem, double score) : idxItem(idxItem),
 
 }
 
-Index_item query_result::getItem() const
+Index_item* query_result::getItem() const
 {
 	return idxItem;
 }

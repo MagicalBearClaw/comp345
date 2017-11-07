@@ -21,7 +21,7 @@ std::vector<std::string> SentenceTokenizerStrategy::tokenize(const std::string &
     currentsentence += text.substr(current, next - current);
     std::string lastWord = currentsentence.substr(currentsentence.find_last_of(" \t"), currentsentence.length() - 1);
     // make last word lower case
-    if (std::find(abreviations.begin(), abreviations.end(), lastWord) != abreviations.end())
+    if (text[next + 1] == ' ' && std::find(abreviations.begin(), abreviations.end(), lastWord) != abreviations.end())
     {
       sentences.push_back(currentsentence);
       currentsentence = "";

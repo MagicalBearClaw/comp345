@@ -3,8 +3,15 @@
 
 #include "indexer.h"
 
-class Document_indexer : public Indexer{
-
+class DocumentIndexer : public Indexer{
+/**
+	 * @brief overloaded extractor to stream content from a file into an indexer object.
+	 * 
+	 * @param ifs input file stream
+	 * @param indexer indexer object
+	 * @return std::ifstream allows for chaining
+	 */
+	friend std::ifstream &operator>>(std::ifstream &ifs, DocumentIndexer &indexer);
 };
 
 #endif //DOCUMENT_INDEXER_H

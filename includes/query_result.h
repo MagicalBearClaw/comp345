@@ -26,7 +26,7 @@ public:
 	 * 
 	 * @return an index items associated with this query.
 	 */
-	Index_item getItem() const;
+	Index_item* getItem() const;
 	/**
 	 * @brief accessor method to return a score
 	 * 

@@ -1,11 +1,14 @@
 #ifndef INDEXER_H
 #define INDEXER_H
 
+#include <tuple>
+
 #include "../includes/document.h"
 #include "../includes/query_result.h"
 #include "../includes/term_index.h"
 
 int main();
+
 
 /**
  * The Indexer class is responsible for storing and maintaining a document index.
@@ -14,14 +17,6 @@ int main();
 //TODO this should now become an abstract base class
 class Indexer
 {
-	/**
-	 * @brief overloaded extractor to stream content from a file into an indexer object.
-	 * 
-	 * @param ifs input file stream
-	 * @param indexer indexer object
-	 * @return std::ifstream allows for chaining
-	 */
-	friend std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer);
 	/**
 	 * @brief overloaded inserter to print out the contents of an indexer object to a stream
 	 * 
@@ -98,17 +93,27 @@ class Indexer
 	 * @return std::vector<query_result> 
 	 */
 	std::vector<query_result> query(std::string queryString, int numOfResults = 10);
-private:
+protected:
+
+	// tuple of words their index_item frequency and the modifier to compute the weight of a term
+	typedef std::tuple<std::string, int, double> wordFrequencyTermMod;
+	// the index_item and it's associated TermIndex (meta data to compute weight)
+	typedef std::tuple<Index_item*, TermIndex>  itemTermIndex;
+
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength; /**Ctr used for display of word column*/
 	int maxColumnSize; /**ctr used for display of count columns*/
 	bool normalized; /** Status check if the index has been normalized*/
 	std::vector<Document> documents; /** vector of all documents*/
 	std::vector<std::string> docNames; /** vector of all document names*/
-	std::vector<std::string> allWords; //**all words in the index*/
+	// std::vector<std::string> allWords; //**all words in the index*/
 	std::vector<double> docTermModifiers; /**log(documnetCount/documentFrequency)*/
 	std::vector<int> docTermFrequency; /**how many documents contain the word*/
 	std::vector<TermIndex> documentIndices;
+
+	std::vector<wordFrequencyTermMod> wftms;
+	std::vector<std::tuple<Index_item*, TermIndex>> itis;
+
 	/**
 	 * @brief the document frequency dft for a term t is defined as the number of documents that t appears in
 	 * 
@@ -119,4 +124,4 @@ private:
 	int calculateDocumentFrequency(std::string word);
 };
 
-#endif
+#endif // INDEXER_H
