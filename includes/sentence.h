@@ -3,7 +3,7 @@
 
 #include "Index_item.h"
 
-class Sentence : Index_item
+class Sentence : public Index_item
 {
     friend std::ostream& operator<<(std::ostream& stream, Sentence& sen);
 public:

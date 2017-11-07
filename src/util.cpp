@@ -27,3 +27,15 @@ void drawLine(const int length) {
 		std::cout << "*";
 	std::cout << std::endl;
 }
+
+int countWords(std::istream & istream){
+  unsigned int count = 0;
+  std::string oneWord;
+
+  while(istream >> oneWord) {
+    ++count;
+  }
+
+  return count;
+}
+

@@ -14,7 +14,7 @@
  * This class also can be used to fetch additional metadata about the 
  * file such as the name and the size (in characters) of the file.
  */
-class Document : Index_item {
+class Document : public Index_item {
   /**
    * Operator overload for debug output 
    * 

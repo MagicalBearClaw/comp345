@@ -37,4 +37,18 @@ std::string crawlToDelimiter(std::istream &stream, std::string delimiters);
 */
 void drawLine(const int length);
 
-#endif
+/**
+ * @brief This utility function returns a count of the number of words in a stream
+ * 
+ * returns the number of tokens seperated by white space within a stream.
+ * 
+ * @param istream the inputstream provided to count arguments of
+ * @return int the count of words within the inputstream
+ */
+int countWords(std::istream & istream);
+int countWords(std::stringstream & sstream);
+int countWords(std::string string);
+int countWords(std::fstream fstream);
+
+
+#endif //UTIL_H

@@ -1,4 +1,5 @@
 #include "..\includes\sentence.h"
+#include "../includes/util.h"
 
   Sentence::Sentence() {} 
 
@@ -15,11 +16,7 @@
     // _size = fileContent.length();
 
     std::stringstream stream(strContent);
-    std::string oneWord;
-
-    unsigned int count = 0;
-    while(stream >> oneWord) {++count;}
-    _size = count;
+    _size = countWords(stream);
   }
 
   Sentence::~Sentence() {}
