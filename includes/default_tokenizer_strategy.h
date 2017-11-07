@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "I_tokenizer_strategy.h"
-
+// TODO rename me
 /**
 *  A default strategy to tokenize a string of words. 
 */

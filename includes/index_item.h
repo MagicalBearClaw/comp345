@@ -23,8 +23,8 @@ class Index_item
     friend std::ostream& operator<<(std::ostream& ostream, Index_item& indexItem);
   public:
 
-    virtual std::string content() const = 0;
-    virtual std::string name() const = 0;
+    virtual std::string content() const;
+    virtual std::string name() const;
     /**
      * @brief The number of words in the sentence
      * 
@@ -36,9 +36,9 @@ class Index_item
      * @brief Deconstructor for all classes which implement this abstract base class.
      */
     virtual ~Index_item() {}
-  private:
-    std::string fileName;    /**The name of the index item*/
-    std::string fileContent; /**The contents of the index item*/
+  protected:
+    std::string _name;    /**The name of the index item*/
+    std::string _content; /**The contents of the index item*/
     int _size; /**The size of the index item*/
 };
 

@@ -12,21 +12,21 @@ std::vector<std::string> SentenceTokenizerStrategy::tokenize(const std::string &
 {
   size_t current = 0;
   size_t next = -1;
-  std::vector<std::string> words;
+  std::vector<std::string> sentences;
   std::string currentsentence = "";
   do
   {
     current = next + 1;
     next = text.find_first_of(this->delimiters, current); // go until sentence terminating punctuation is reached
     currentsentence += text.substr(current, next - current);
-    std::string lastWord = currentsentence.substr(currentsentence.find_last_of(" \t"), currentsentence.length - 1);
+    std::string lastWord = currentsentence.substr(currentsentence.find_last_of(" \t"), currentsentence.length() - 1);
     // make last word lower case
     if (std::find(abreviations.begin(), abreviations.end(), lastWord) != abreviations.end())
     {
-      words.push_back(currentsentence);
+      sentences.push_back(currentsentence);
       currentsentence = "";
     }
   } while (next != std::string::npos);
 
-  return words;
+  return sentences;
 }

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <sstream>
 #include <iostream>
+#include <locale>
 
 #include "../includes/util.h"
 
@@ -37,5 +38,23 @@ int countWords(std::istream & istream){
   }
 
   return count;
+}
+
+int countWords(std::string text) {
+  int ctr = 0;
+  std::string delimiters = " \t\n,";
+  size_t current = 0;
+  size_t next = -1;
+  
+  do
+	{
+		current = next + 1;
+		next = text.find_first_of(delimiters, current);
+		std::string currentword = text.substr(current, next - current);
+		std::transform(currentword.begin(), currentword.end(), currentword.begin(), tolower);
+		if (currentword != "") {
+      ++ctr;
+    }
+	} while (next != std::string::npos);
 }
 

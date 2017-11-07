@@ -11,9 +11,9 @@ std::ostream& operator<<(std::ostream& stream, Index_item& indexItem) {
   }
 
 std::string Index_item::content() const {
-    return fileContent;
+    return _content;
   }
   
   std::string Index_item::name() const {
-    return !fileName.empty() ? fileName : "unnamed document";
+    return !_name.empty() ? _name : "unnamed document";
   }

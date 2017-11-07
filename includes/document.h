@@ -39,15 +39,6 @@ public:
   Document(std::string fileName);
   ~Document(); /**Destructor for document class (does nothing so far)*/
   /**
-   * Gets name of document
-   * 
-   * Gets the name of the file the document is based on what was input in the
-   * constructor. If no parameter constructor is used the name will be "unnamed document"
-   * 
-   * @return std::string the name of the document
-   */
-  std::string name() const override;
-  /**
    * Gets the size of the document
    * 
    * Gets the size of the contents of the document based on character count
@@ -55,17 +46,6 @@ public:
    * @return int The number of characters in the document
    */
   int size() const override;
-  /**
-   * Gets the contents of the document
-   * 
-   * @return std::string the contents of the document
-   */
-  std::string content() const override;
-
-private:
-  std::string fileName;    /**The name of the document*/
-  std::string fileContent; /**The contents of the document*/
-  int _size;               /**The size of the document*/
 };
 
 #endif //DOCUMENT_H

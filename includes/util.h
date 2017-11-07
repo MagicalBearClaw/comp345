@@ -46,9 +46,9 @@ void drawLine(const int length);
  * @return int the count of words within the inputstream
  */
 int countWords(std::istream & istream);
-int countWords(std::stringstream & sstream);
-int countWords(std::string string);
-int countWords(std::fstream fstream);
+// int countWords(std::stringstream & sstream);
+int countWords(std::string text);
+// int countWords(std::fstream fstream);
 
 
 #endif //UTIL_H
