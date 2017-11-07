@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 /**
  * @brief This abstract base class(ABC) is used to define common code that is shared by all indexable items.
@@ -24,6 +25,11 @@ class Index_item
 
     virtual std::string content() const = 0;
     virtual std::string name() const = 0;
+    /**
+     * @brief The number of words in the sentence
+     * 
+     * @return int number of words in sentence
+     */
     virtual int size() const = 0;
 
     /**

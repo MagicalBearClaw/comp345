@@ -1,15 +1,8 @@
 #include "..\includes\sentence.h"
 
-//Friend function
-std::ostream& operator<<(std::ostream& stream, Sentence& sen) {
-    stream << "Sentence from file: " << sen.name() << std::endl;
-    stream << "Size: " << sen.size() << std::endl;
-    stream << "Content:\n" << sen.content() << std::endl;
-    return stream;
-  }
-
   Sentence::Sentence() {} 
 
+  //TODO should there be just sentences in here? not document content
   Sentence::Sentence(std::string fileName): fileName(fileName) {
     // std::fstream file(fileName);
     // std::stringstream buffer;
