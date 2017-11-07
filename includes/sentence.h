@@ -1,19 +1,26 @@
 #ifndef SENTENCE_H
 #define SENTENCE_H
 
-#include "../includes/Index_item.h"
+#include "Index_item.h"
 
 class Sentence : Index_item
 {
+    friend std::ostream& operator<<(std::ostream& stream, Sentence& sen);
 public:
-    std::string content() override;
-    std::string name() override;
-    int size() override;
+    Sentence();
+    Sentence(std::string fileName);
+    ~Sentence(); /**Destructor for Sentence class (does nothing so far)*/
+    std::string content() const override;
+    std::string name() const override;
+    int size() const override;
 
-    int getPost();
+    int getPos() const;
 private:
-    /** @brief Start position of the sentence(character offset) within document */
-    int pos;
+    int pos; /** @brief Start position of the sentence(character offset) within document */
+    std::string fileName;    /**The name of the sentence(document)*/
+    std::string fileContent; /**The contents of the sentence(document)*/
+    int _size;               /**The size of the sentence*/
+
 
 };
 

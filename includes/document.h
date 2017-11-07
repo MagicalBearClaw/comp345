@@ -2,13 +2,12 @@
 #define DOCUMENT_H
 
 #include <string>
-#include <ostream>
 #include <map>
 #include <vector>
 
-#include "..\includes\stopword.h"
-//TODO not sure if this should be here or not?
-#include "../includes/Index_item.h"
+#include "stopword.h"
+
+#include "Index_item.h"
 
 /**
  * Class used to store the contents of a file.
@@ -66,6 +65,7 @@ public:
 private:
   std::string fileName;    /**The name of the document*/
   std::string fileContent; /**The contents of the document*/
+  int _size;               /**The size of the document*/
 };
 
-#endif
+#endif //DOCUMENT_H

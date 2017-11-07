@@ -1,4 +1,4 @@
-#include "..\includes\document_indexer.h"
+#include "../includes/document_indexer.h"
 
 
 class Document_indexer : Indexer {

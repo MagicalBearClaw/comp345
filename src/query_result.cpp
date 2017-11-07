@@ -1,16 +1,16 @@
 #include "../includes/query_result.h"
 
-query_result::query_result(Document doc, double rank) : doc(doc), rank(rank)
+query_result::query_result(Index_item idxItem, double score) : idxItem(idxItem), score(score)
 {
 
 }
 
-Document query_result::getDocument() const
+Index_item query_result::getItem() const
 {
-	return doc;
+	return idxItem;
 }
 
-double query_result::getRank() const
+double query_result::getScore() const
 {
-	return rank;
+	return score;
 }

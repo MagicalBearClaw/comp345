@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <algorithm>
@@ -6,8 +5,13 @@
 
 #include "..\includes\document.h"
 
-
-const int notFound = 0;
+//Friend function
+std::ostream& operator<<(std::ostream& stream, Document& doc) {
+  stream << "Document: " << doc.fileName << std::endl;
+  stream << "Size: " << doc.size() << std::endl;
+  stream << "Content:\n" << doc.fileContent << std::endl;
+  return stream;
+}
 
 Document::Document() {} 
 
@@ -20,26 +24,20 @@ Document::Document(std::string fileName): fileName(fileName) {
   }
   buffer << file.rdbuf();
   fileContent = buffer.str();
+  _size = fileContent.length();
 }
 
 Document::~Document() {}
 
-std::ostream& operator<<(std::ostream& stream, Document& doc) {
-  stream << "Document: " << doc.fileName << std::endl;
-  stream << "Size: " << doc.size() << std::endl;
-  stream << "Content:\n" << doc.fileContent << std::endl;
-  return stream;
+std::string Document::content() const {
+  return fileContent;
 }
 
 std::string Document::name() const {
   return !fileName.empty() ? fileName : "unnamed document";
 }
 
-
 int Document::size() const {
-  return fileContent.length();
+  return _size;
 }
 
-std::string Document::content() const {
-  return fileContent;
-}

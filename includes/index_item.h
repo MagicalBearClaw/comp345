@@ -33,7 +33,7 @@ class Index_item
   private:
     std::string fileName;    /**The name of the index item*/
     std::string fileContent; /**The contents of the index item*/
-    int _size; /**The size of the index item**/
+    int _size; /**The size of the index item*/
 };
 
 #endif //INDEX_ITEM_H
