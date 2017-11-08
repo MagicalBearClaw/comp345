@@ -36,8 +36,8 @@ std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
         {
             indexer.maxColumnSize = docName.length();
         }
-        Document doc(docName);
-        doc >> indexer; // "stream" document into indexer
+        Document *doc = new Document(docName); // probably memory leak make destructor for indexer clean this up
+        *doc >> indexer; // "stream" document into indexer
     }
 
     return ifs;

@@ -30,9 +30,9 @@ int main()
 		std::vector<query_result> ranks = idx->query(buffer, numOfResults);
 		std::sort(ranks.begin(), ranks.end(), [](query_result a, query_result b) 
 		{
-			return a.getItem().name().size() > b.getItem().name().size();
+			return a.getItem()->name().size() > b.getItem()->name().size();
 		});
-		int maxLength = ranks[0].getItem().name().size();
+		int maxLength = ranks[0].getItem()->name().size();
 		std::sort(ranks.begin(), ranks.end(), [](query_result a, query_result b)
 		{
 			return a.getScore() > b.getScore();
@@ -42,9 +42,9 @@ int main()
 
 		std::cout << std::setw(maxLength) << std::left  << "File Name " << " Rank "<< std::endl;
 
-		for (auto i = ranks.begin(); i != ranks.end(); ++i)
+		for (std::vector<query_result>::iterator i = ranks.begin(); i != ranks.end(); ++i)
 		{
-			std::cout << std::setw(maxLength) << std::left << i->getItem().name() << " " << i->getScore() << std::endl;
+			std::cout << std::setw(maxLength) << std::left << i->getItem()->name() << " " << i->getScore() << std::endl;
 		}
 	} 
 
