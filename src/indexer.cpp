@@ -31,9 +31,9 @@ bool Indexer::isNormalized(Indexer& indexer) {
 	return normalized;
 }
 // same functionality (index item*)
-Document Indexer::operator[](int position)
+Index_item* Indexer::operator[](int position)
 {
-	return documents[position];
+	return std::get<0>(itis[position]);
 }
 
 // A function normalize() computes the tf-idf weights based on the number N of indexed documents.

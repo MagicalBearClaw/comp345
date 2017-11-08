@@ -261,11 +261,11 @@ std::vector<query_result> DocumentIndexer::query(std::string queryString, int nu
 	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
 	std::vector<wordFrequencyTermMod> commonWords;
 	// std::vector<double> commonDocTermModifiers;
-	int position; for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
+	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
 		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [i](const wordFrequencyTermMod & arg) { return std::get<0>(arg) == *i; });
 		if (element != wftms.end()) {
 			queryDoc.indexWord(std::get<0>(*element));
-			commonWords.push_back(*element); // make common words into wftms vector
+			commonWords.push_back(*element);
 											 // commonDocTermModifiers.push_back(docTermModifiers[position]);
 		}
 	}
@@ -275,7 +275,7 @@ std::vector<query_result> DocumentIndexer::query(std::string queryString, int nu
 	double score;
 	for (std::vector<itemTermIndex>::iterator iDoc = itis.begin(); iDoc != itis.end(); ++iDoc) {
 		// get the document that matches the documentIndex position
-		Document *doc = dynamic_cast<Document*>(std::get<0>(*iDoc)); // make pointer at some point
+		Document *doc = dynamic_cast<Document*>(std::get<0>(*iDoc));
 		double vectorProductAcc = 0.0;
 		for (std::vector<wordFrequencyTermMod>::iterator cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
 			// position = cWord - commonWords.begin();

@@ -51,14 +51,14 @@ class Indexer
 	 *
 	 * @return Document*	The selected document object as requested by index.
 	 */
-	Document operator[](int position);
+	Index_item* operator[](int position);
 	
 	/**
 	 * @brief Returns if the provided inedxer is normalized
 	 * 
 	 * @param indexer 
 	 * @return true 
-	 * @return false 
+	 * @return false
 	 */
 	bool isNormalized(Indexer& indexer);
 	/**

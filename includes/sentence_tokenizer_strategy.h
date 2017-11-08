@@ -1,5 +1,5 @@
-#ifndef DEFAULT_TOKENIZER_strategy_H
-#define DEFAULT_TOKENIZER_strategy_H
+#ifndef SENTENCE_TOKENIZER_strategy_H
+#define SENTENCE_TOKENIZER_strategy_H
 
 #include <string>
 #include <vector>

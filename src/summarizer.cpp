@@ -23,23 +23,48 @@
 //}
 
 
-#include "../includes/indexer.h"
 #include <fstream>
 #include <assert.h>
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <vector>
+
+#include "../includes/indexer.h"
+#include "../includes/document_indexer.h"
 #include "../includes/sentence_indexer.h"
+#include "../includes/query_result.h"
+
 int main()
 {
 	int numOfResults = 10;
-	Sentence_indexer *idx = new Sentence_indexer();
+	Indexer *dIdx = new DocumentIndexer();
 	//TODO: change this to read one of topic sentence.
 	std::ifstream ifs("resources/index.txt");
 	assert(ifs.good() && "Invalid file name");
 	while (!ifs.eof())
 	{
-		ifs >> *(Sentence_indexer*)idx;
+		ifs >> *dynamic_cast<DocumentIndexer*>(dIdx);
+	}
+	
+	std::ifstream queries("resources/a3index.txt");
+	assert(queries.good() && "Invalid file name");
+	while (!queries.eof())
+	{
+		Indexer *idx = new Sentence_indexer();
+		std::string query;
+		queries >> query;
+		std::cout << "Essay for: " << query << std::endl;
+		std::vector<query_result> releventDocs = dIdx->query(query, 5);
+		for (std::vector<query_result>::iterator result = releventDocs.begin(); result != releventDocs.begin(); ++result) {
+			result->getItem() >> *dynamic_cast<Sentence_indexer*>(idx);
+		}
+		std::vector<query_result> relevantSentences = idx->query(query);
+		for(std::vector<query_result>::iterator sentence = relevantSentences.begin(); sentence != relevantSentences.end(); ++sentence) {
+			std::cout << sentence->getItem()->content() << " ";
+		}
+		std::cout << std::endl;
+		delete idx;
 	}
 	// idx->generate_essay();
 	//std::cout << idx; // display essay

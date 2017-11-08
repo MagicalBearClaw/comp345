@@ -65,3 +65,6 @@ $(OUTDIR)\sentence_tokenizer_strategy.o : $(SRC)\sentence_tokenizer_strategy.cpp
 
 $(OUTDIR)\index_item.o : $(SRC)\index_item.cpp $(INCLUDES)\index_item.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\index_item.cpp -o $(OUTDIR)\index_item.o
+	
+$(OUTDIR)\summarizer.o : $(SRC)\summarizer.cpp $(INCLUDES)\summarizer.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\summarizer.cpp -o $(OUTDIR)\summarizer.o
