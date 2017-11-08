@@ -2,8 +2,8 @@
 #define TOKENIZER_H
 
 #include <string>
-#include "../includes/I_tokenizer_strategy.h"
-#include "default_tokenizer_strategy.h"
+#include "../includes/abstract_tokenizer_strategy.h"
+#include "word_tokenizer_strategy.h"
 #include <ostream>
 
 /**
@@ -33,7 +33,7 @@ public:
 	* default strategy will be used.
 	* @see default_tokenizer_strategy
 	*/
-	tokenizer(I_tokenizer_strategy * strat = new default_tokenizer_strategy());
+	tokenizer(abstract_tokenizer_strategy * strat = new word_tokenizer_strategy());
 	/**
 	* Deconstruct the tokenizer instance, freeing the strategy.
 	*/
@@ -49,9 +49,9 @@ public:
 	* Note: The previous strategy will be freed.
 	* @param strat The new strategy to be used to tokenize.
 	*/
-	void setTokenizerstrategy(I_tokenizer_strategy * strat);
+	void setTokenizerstrategy(abstract_tokenizer_strategy * strat);
 private:
-	I_tokenizer_strategy * strategy;
+	abstract_tokenizer_strategy * strategy;
 };
 
 #endif // TOKENIZER_H

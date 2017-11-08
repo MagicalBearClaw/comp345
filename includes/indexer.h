@@ -17,27 +17,6 @@ int main();
 //TODO this should now become an abstract base class
 class Indexer
 {
-	friend std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer);
-	/**
-	 * @brief overloaded inserter to print out the contents of an indexer object to a stream
-	 * 
-	 * @param ios output stream to insert content into
-	 * @param indexer object to stream content out from
-	 * @return std::ostream allows for chaining
-	 */
-	friend std::ostream &operator<<(std::ostream &ios, Indexer &indexer);
-	/**
-	 * @brief overloaded extractor operator used to extract the content of a document into an indexer
-	 * 
-	 * This function is an alternative way to add a document to an indexer object.
-	 * This functions primary purpose is used to build the indexers documentIndex
-	 * by streaming in documentes one at a time.
-	 * 
-	 * @param doc the document to add to the index
-	 * @param indexer the indexer to add a document to
-	 */
-	friend void operator>>(Document &doc, Indexer &indexer);
-
   public:
 	/** 
 	 * Default Constructor
@@ -46,7 +25,7 @@ class Indexer
 	 */
 	Indexer();
 	/** @brief Desctructor for Indexer class*/
-	~Indexer();
+	virtual ~Indexer();
 	/**
 	 * @brief returns the number of documents in the index.
 	 *
@@ -62,7 +41,7 @@ class Indexer
 	* These weights are storied inside the indexer.
 	*
 	*/
-	void normalize();
+	virtual void normalize() = 0;
 
 	/**
 	* @brief Overloaded array access operator to retrieve document by index
@@ -93,36 +72,23 @@ class Indexer
 	 * @param numOfResults number of results to return defaulted to 10
 	 * @return std::vector<query_result> 
 	 */
-	std::vector<query_result> query(std::string queryString, int numOfResults = 10);
+	virtual std::vector<query_result> query(std::string queryString, int numOfResults = 10) = 0;
 protected:
-
-	// tuple of words their index_item frequency and the modifier to compute the weight of a term
-	typedef std::tuple<std::string, int, double> wordFrequencyTermMod;
 	// the index_item and it's associated TermIndex (meta data to compute weight)
 	typedef std::tuple<Index_item*, TermIndex>  itemTermIndex;
-
+	std::vector<std::tuple<Index_item*, TermIndex>> itis;
 	int documentCount; /**The number of documents in the index*/
-	int maxWordLength; /**Ctr used for display of word column*/
+
 	int maxColumnSize; /**ctr used for display of count columns*/
 	bool normalized; /** Status check if the index has been normalized*/
 	std::vector<Document> documents; /** vector of all documents*/
 	std::vector<std::string> docNames; /** vector of all document names*/
-	// std::vector<std::string> allWords; //**all words in the index*/
+									   // std::vector<std::string> allWords; //**all words in the index*/
 	std::vector<double> docTermModifiers; /**log(documnetCount/documentFrequency)*/
 	std::vector<int> docTermFrequency; /**how many documents contain the word*/
 	std::vector<TermIndex> documentIndices;
+	virtual int calculateDocumentFrequency(std::string term) = 0;
 
-	std::vector<wordFrequencyTermMod> wftms;
-	std::vector<std::tuple<Index_item*, TermIndex>> itis;
-
-	/**
-	 * @brief the document frequency dft for a term t is defined as the number of documents that t appears in
-	 * 
-	 * This member function is used to count the total number of documents that a word appears in
-	 * @param word the word to caluclate the frequency for
-	 * @return int the documentFrequency for the specified word
-	 */
-	int calculateDocumentFrequency(std::string word);
 };
 
 #endif // INDEXER_H

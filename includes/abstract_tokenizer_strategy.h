@@ -8,8 +8,7 @@
  * This interface is responsible for providing a stategy to break text
  * into tokens.
  */
-//TODO this should instead be changed to ABS Abstract_Tokenizer
-class I_tokenizer_strategy
+class abstract_tokenizer_strategy
 {
   public:
 	/**
@@ -22,7 +21,7 @@ class I_tokenizer_strategy
 	 * @brief Deconstructor for all tokenizer strategies which implement this interface.
 	 * 
 	 */
-	virtual ~I_tokenizer_strategy() {}
+	virtual ~abstract_tokenizer_strategy() {}
 };
 
 #endif
