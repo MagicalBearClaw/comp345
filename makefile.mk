@@ -2,7 +2,7 @@ OUTDIR = bin
 SRC = src
 INCLUDES = includes
 #TODO should we seperate OBJS into smaller subsets based on what each exe needs?
-OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\sentence.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o $(OUTDIR)\term_index.o $(OUTDIR)\sentence_tokenizer_strategy.o $(OUTDIR)\index_item.o
+OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\sentence.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o $(OUTDIR)\term_index.o $(OUTDIR)\sentence_tokenizer_strategy.o $(OUTDIR)\index_item.o $(OUTDIR)\document_indexer.o
 CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
