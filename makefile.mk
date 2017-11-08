@@ -2,7 +2,7 @@ OUTDIR = bin
 SRC = src
 INCLUDES = includes
 #TODO should we seperate OBJS into smaller subsets based on what each exe needs?
-OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\sentence.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o $(OUTDIR)\term_index.o $(OUTDIR)\sentence_tokenizer_strategy.o
+OBJS = $(OUTDIR)\indexer.o $(OUTDIR)\document.o $(OUTDIR)\sentence.o $(OUTDIR)\util.o $(OUTDIR)\stopword.o $(OUTDIR)\tokenizer.o $(OUTDIR)\default_tokenizer_strategy.o $(OUTDIR)\query_result.o $(OUTDIR)\term_index.o $(OUTDIR)\sentence_tokenizer_strategy.o $(OUTDIR)\index_item.o
 CC = g++
 DEBUG = -g
 CFLAGS = -c $(DEBUG)
@@ -62,3 +62,6 @@ $(OUTDIR)\sentence_indexer.o : $(SRC)\sentence_indexer.cpp $(INCLUDES)\sentence_
 	
 $(OUTDIR)\sentence_tokenizer_strategy.o : $(SRC)\sentence_tokenizer_strategy.cpp $(INCLUDES)\sentence_tokenizer_strategy.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\sentence_tokenizer_strategy.cpp -o $(OUTDIR)\sentence_tokenizer_strategy.o
+
+$(OUTDIR)\index_item.o : $(SRC)\index_item.cpp $(INCLUDES)\index_item.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)\index_item.cpp -o $(OUTDIR)\index_item.o

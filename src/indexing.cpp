@@ -4,7 +4,7 @@
 #include <fstream>
 #include <cassert>
 
-#include "../includes/app.h"
+#include "../includes/indexing.h"
 #include "../includes/indexer.h"
 
 int main(void)

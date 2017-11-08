@@ -17,6 +17,7 @@ int main();
 //TODO this should now become an abstract base class
 class Indexer
 {
+	friend std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer);
 	/**
 	 * @brief overloaded inserter to print out the contents of an indexer object to a stream
 	 * 

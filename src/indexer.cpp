@@ -21,6 +21,29 @@ Indexer::Indexer()
 Indexer::~Indexer() {}
 
 
+//Works like defined in assignment #2 indexing and querying complete documents
+// doc specific
+std::ifstream &operator>>(std::ifstream &ifs, Indexer &indexer)
+{
+    while (!ifs.eof())
+    {
+        std::string docName = crawlToDelimiter(ifs, "\n");
+        if (docName.empty())
+        {
+            continue;
+        }
+        if (indexer.maxColumnSize < docName.length());
+        {
+            indexer.maxColumnSize = docName.length();
+        }
+        Document doc(docName);
+        doc >> indexer; // "stream" document into indexer
+    }
+
+    return ifs;
+}
+
+
 // override
 void operator>>(Document &doc, Indexer &indexer)
 {
@@ -32,7 +55,7 @@ void operator>>(Document &doc, Indexer &indexer)
 
 		//find_if(table.begin(), table.end(), [&new_id](const entry &arg) { 
 			//return arg.first == new_id; }) !=
-		if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const Indexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; })) {
+		if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const Indexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; }) == indexer.wftms.end()) {
 			if(i->length() > indexer.maxWordLength) {
 				indexer.maxWordLength = i->length();
 			}
@@ -93,20 +116,20 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	totals.resize(columnCount);
 
 	//main table display
-	for (std::vector<std::string>::iterator it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
+	for (std::vector<Indexer::wordFrequencyTermMod>::iterator it = indexer.wftms.begin(); it != indexer.wftms.end(); ++it)
 	{
-		std::string currentWord = *it;
+		std::string currentWord = std::get<0>(*it);
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
-		int position = std::distance(indexer.allWords.begin(), it);
-		double modifier = indexer.docTermModifiers[position];
-		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
+		// int position = std::distance(indexer.allWords.begin(), it);
+		double modifier = std::get<2>(*it);
+		for (std::vector<Indexer::itemTermIndex>::iterator docs = indexer.itis.begin(); docs != indexer.itis.end(); ++docs)
 		{
-			totals[indx] += (*docs)[*it];
-			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
+			totals[indx] += std::get<1>(*docs)[currentWord];
+			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << std::get<1>(*docs)[currentWord] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << std::get<1>(*docs).termWeight(currentWord, std::get<2>(*it));
 			++indx;
 		}
-		std::cout << " * " << std::right << std::setw(maxColumnLength) << indexer.docTermFrequency[position];
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << std::get<1>(*it);
 		std::cout << " *" << std::endl;
 	}
 	drawLine(horizontalLine);
@@ -122,58 +145,58 @@ std::ostream & operator<<(std::ostream &ios, Indexer &indexer) {
 	drawLine(horizontalLine);
 
 
-	std::cout << std::endl << "Without stopwords" << std::endl << std::endl;
-	//display a hoirzontal line of asterisks
-	drawLine(horizontalLine);
+	// std::cout << std::endl << "Without stopwords" << std::endl << std::endl;
+	// //display a hoirzontal line of asterisks
+	// drawLine(horizontalLine);
 
-	//display a header line including the word dictionary and the list of document names
-	std::cout << "* " << std::setw(maxWordLength) << std::left << title;
+	// //display a header line including the word dictionary and the list of document names
+	// std::cout << "* " << std::setw(maxWordLength) << std::left << title;
 
-	//Loop to display all file names seperated by an asterisk
-	for (auto it = indexer.documents.begin(); it != indexer.documents.end(); ++it)
-	{
-		std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
-	}
+	// //Loop to display all file names seperated by an asterisk
+	// for (auto it = indexer.documents.begin(); it != indexer.documents.end(); ++it)
+	// {
+	// 	std::cout << " * " << std::setw(maxColumnLength) << std::right << it->name();
+	// }
 	
-	std::cout << " * " << std::setw(maxColumnLength) << std::right << "Document Frequency";
-	std::cout << " *" << std::endl;
+	// std::cout << " * " << std::setw(maxColumnLength) << std::right << "Document Frequency";
+	// std::cout << " *" << std::endl;
 
-	//display a hoirzontal line of asterisks
-	drawLine(horizontalLine);
-	totals.clear();
-	totals.resize(columnCount);
-	StopWord sw = StopWord("resources/stopwords.txt");
+	// //display a hoirzontal line of asterisks
+	// drawLine(horizontalLine);
+	// totals.clear();
+	// totals.resize(columnCount);
+	// StopWord sw = StopWord("resources/stopwords.txt");
 
-	//main table display
-	for (auto it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
-	{
-		if (sw(*it))
-			continue;
-		std::string currentWord = *it;
-		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
-		int indx = 0;
-		int position = std::distance(indexer.allWords.begin(), it);
-		double modifier = indexer.docTermModifiers[position];
-		for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
-		{
-			totals[indx] += (*docs)[*it];
-			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
-			++indx;
-		}
-		std::cout << " * " << std::right << std::setw(maxColumnLength) << indexer.docTermFrequency[position];
-		std::cout << " *" << std::endl;
-	}
-	drawLine(horizontalLine);
-	// Display totals
-	std::cout << "* " << std::left << std::setw(maxWordLength) << "Total: ";
-	for (auto it = totals.begin(); it != totals.end(); ++it)
-	{
-		std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
-	}
+	// //main table display
+	// for (auto it = indexer.allWords.begin(); it != indexer.allWords.end(); ++it)
+	// {
+	// 	if (sw(*it))
+	// 		continue;
+	// 	std::string currentWord = *it;
+	// 	std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
+	// 	int indx = 0;
+	// 	int position = std::distance(indexer.allWords.begin(), it);
+	// 	double modifier = indexer.docTermModifiers[position];
+	// 	for (std::vector<TermIndex>::iterator docs = indexer.documentIndices.begin(); docs != indexer.documentIndices.end(); ++docs)
+	// 	{
+	// 		totals[indx] += (*docs)[*it];
+	// 		std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << (*docs)[*it] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength%2) << docs->termWeight(*it, modifier);
+	// 		++indx;
+	// 	}
+	// 	std::cout << " * " << std::right << std::setw(maxColumnLength) << indexer.docTermFrequency[position];
+	// 	std::cout << " *" << std::endl;
+	// }
+	// drawLine(horizontalLine);
+	// // Display totals
+	// std::cout << "* " << std::left << std::setw(maxWordLength) << "Total: ";
+	// for (auto it = totals.begin(); it != totals.end(); ++it)
+	// {
+	// 	std::cout << " * " << std::right << std::setw(maxColumnLength) << *it;
+	// }
 	
-	std::cout << " * " << std::setw(maxColumnLength) << std::right << " ";
-	std::cout << " *" << std::endl;
-	drawLine(horizontalLine);
+	// std::cout << " * " << std::setw(maxColumnLength) << std::right << " ";
+	// std::cout << " *" << std::endl;
+	// drawLine(horizontalLine);
 	return ios;
 }
 // same functionality
@@ -184,8 +207,8 @@ int Indexer::size() {
 // same functionality, better name (term index frequency)
 int Indexer::calculateDocumentFrequency(std::string word){
 	int docFrequencyAcc = 0;
-	for(std::vector<TermIndex>::iterator iter = documentIndices.begin(); iter != documentIndices.end(); ++iter){
-		docFrequencyAcc += (*iter)[word] ? 1 : 0;
+	for(std::vector<itemTermIndex>::iterator iter = itis.begin(); iter != itis.end(); ++iter){
+		docFrequencyAcc += std::get<1>(*iter)[word] ? 1 : 0;
 	}
 
 	return docFrequencyAcc;
@@ -198,23 +221,26 @@ void Indexer::normalize()
 	int documentFrequency = 0;
 	double dtModifier = 0.0; 
 	
-	for(std::vector<std::string>::const_iterator iter = allWords.begin(); iter != allWords.end(); ++iter) {
+	for(std::vector<wordFrequencyTermMod>::iterator iter = wftms.begin(); iter != wftms.end(); ++iter) {
 		
-		documentFrequency = calculateDocumentFrequency(*iter);
+		documentFrequency = calculateDocumentFrequency(std::get<0>(*iter));
 
 		dtModifier = std::log((double)documentCount / (double)documentFrequency);
-		docTermModifiers.push_back(dtModifier);
-		docTermFrequency.push_back(documentFrequency);
+		std::get<1>(*iter) = documentFrequency;
+		std::get<2>(*iter) = dtModifier;
+		// docTermModifiers.push_back(dtModifier);
+		// docTermFrequency.push_back(documentFrequency);
 	}
 	double weight;
 	int maxAcc;
-	for (std::vector<TermIndex>::iterator iter = documentIndices.begin(); iter != documentIndices.end(); ++iter) {
-		iter->normalize(allWords, docTermModifiers);
+	for (std::vector<itemTermIndex>::iterator iter = itis.begin(); iter != itis.end(); ++iter) {
+		std::get<1>(*iter).normalize(wftms);
+		// iter->normalize(allWords, docTermModifiers);
 		// verify that column size values are not suppased (this is for rendering the table later on)
 		maxAcc = 0;
-		for (auto word = allWords.begin(); word != allWords.end(); ++word) {
-			maxAcc += (*iter)[*word];
-			weight = iter->termWeight(*word, docTermModifiers[word - allWords.begin()]);
+		for (std::vector<wordFrequencyTermMod>::iterator word = wftms.begin(); word != wftms.end(); ++word) {
+			maxAcc += std::get<1>(*iter)[std::get<0>(*word)];
+			weight = std::get<1>(*iter).termWeight(std::get<0>(*word), std::get<2>(*word)); // iter->termWeight(*word, docTermModifiers[word - allWords.begin()]);
 			if (std::to_string(weight).length() > maxColumnSize / 2 - maxColumnSize % 2) {
 				maxColumnSize = std::to_string(weight).length() * 2 + 2;
 			}
@@ -243,36 +269,34 @@ std::vector<query_result> Indexer::query(std::string queryString, int numOfResul
 	default_tokenizer_strategy * strat = new default_tokenizer_strategy();
 	tokenizer tkzr = tokenizer(strat);
 	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
-	std::vector<std::string> commonWords;
-	std::vector<double> commonDocTermModifiers;
-	int position;
-	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
-		auto element = std::find(allWords.begin(), allWords.end(), *i);
-		if (element != allWords.end()) {
-			position = std::distance(allWords.begin(),element);
-			queryDoc.indexWord(*i);
-			commonWords.push_back(*i);
-			commonDocTermModifiers.push_back(docTermModifiers[position]);
+	std::vector<wordFrequencyTermMod> commonWords;
+	// std::vector<double> commonDocTermModifiers;
+	int position;for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i) {
+		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [i](const wordFrequencyTermMod & arg) { return std::get<0>(arg) == *i; });
+		if (element != wftms.end()) {
+			queryDoc.indexWord(std::get<0>(*element));
+			commonWords.push_back(*element); // make common words into wftms vector
+			// commonDocTermModifiers.push_back(docTermModifiers[position]);
 		}
 	}
-	queryDoc.normalize(allWords, docTermModifiers);
+	queryDoc.normalize(wftms);
 
 	double commonModifier;
 	double score;
-	for (std::vector<TermIndex>::iterator iDoc = documentIndices.begin(); iDoc != documentIndices.end(); ++iDoc) {
+	for (std::vector<itemTermIndex>::iterator iDoc = itis.begin(); iDoc != itis.end(); ++iDoc) {
 		// get the document that matches the documentIndex position
-		Document doc = documents[iDoc - documentIndices.begin()];
+		Document *doc = dynamic_cast<Document*>(std::get<0>(*iDoc)); // make pointer at some point
 		double vectorProductAcc = 0.0;
-		for (std::vector<std::string>::const_iterator cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
-			position = cWord - commonWords.begin();
-			commonModifier = commonDocTermModifiers[position];
-			vectorProductAcc += ((iDoc->termWeight(*cWord, commonModifier)) * (queryDoc.termWeight(*cWord, commonModifier)));
+		for (std::vector<wordFrequencyTermMod>::iterator cWord = commonWords.begin(); cWord != commonWords.end(); ++cWord) {
+			// position = cWord - commonWords.begin();
+			commonModifier = std::get<2>(*cWord);
+			vectorProductAcc += ((std::get<1>(*iDoc).termWeight(std::get<0>(*cWord), commonModifier)) * (queryDoc.termWeight(std::get<0>(*cWord), commonModifier)));
 		}
-		score = vectorProductAcc / (iDoc->docNorm() * queryDoc.docNorm());
+		score = vectorProductAcc / (std::get<1>(*iDoc).docNorm() * queryDoc.docNorm());
 		if (std::isnan(score)) {
 			score = 0;
 		}
-		results.push_back(query_result(&doc, score));
+		results.push_back(query_result(doc, score));
 	}
 	int reultCap = numOfResults;
 	if (numOfResults > results.size())

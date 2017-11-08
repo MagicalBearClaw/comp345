@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <tuple>
 
 #include "../includes/stopword.h"
 
@@ -15,7 +16,7 @@ public:
   void indexWord(std::string word);
   int operator[](const std::string word);
   double termWeight(std::string word, double documentModifier);
-  void normalize(const std::vector<std::string> &word, const std::vector<double> &documentModifiers, StopWord *sw = nullptr);
+  void normalize(const std::vector<std::tuple<std::string, int, double>> &wftms, StopWord *sw = nullptr);
   double docNorm();
 private:
   double norm;
