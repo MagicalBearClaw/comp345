@@ -1,10 +1,8 @@
-#include "..\includes\index_item.h"
-
-//Move all the shared functionality (shared code) from document.cpp and sentence.cpp here
-//remove repeated code in those classes
+#include "../includes/index_item.h"
 
 std::ostream &operator<<(std::ostream &stream, Index_item &indexItem)
 {
+  stream << "Index_Item: "<< std::endl;
   stream << "Name: " << indexItem.name() << std::endl;
   stream << "Size: " << indexItem.size() << std::endl;
   stream << "Content:\n"
@@ -19,5 +17,5 @@ std::string Index_item::content() const
 
 std::string Index_item::name() const
 {
-  return !_name.empty() ? _name : "unnamed document";
+  return !_name.empty() ? _name : "unnamed item";
 }

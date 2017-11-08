@@ -1,10 +1,20 @@
 #include <sstream>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
-#include "..\includes\document.h"
+#include "../includes/document.h"
 
 
+std::ostream &operator<<(std::ostream &stream, Document &document)
+{
+  stream << "Document: "<< std::endl;
+  stream << "Name: " << document.name() << std::endl;
+  stream << "Size:(Character count of document) " << document.size() << std::endl;
+  stream << "Content:\n"
+         << document.content() << std::endl;
+  return stream;
+}
 Document::Document() {} 
 
 Document::Document(std::string fileName) {
@@ -22,6 +32,7 @@ Document::Document(std::string fileName) {
 
 Document::~Document() {}
 
+//Size represents different values, but method for returning size is same as sibling class.
 int Document::size() const {
   return _size;
 }

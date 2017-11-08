@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 
 #include "../includes/sentence_indexer.h"
 #include "../includes/sentence_tokenizer_strategy.h"
@@ -18,14 +19,23 @@ std::ostream & operator<<(std::ostream &ios, Sentence_indexer &indexer)
 }
 void operator >> (Index_item *doc, Sentence_indexer &indexer)
 {
+	std::vector<std::string> abreviations;
+	std::ifstream abvsFile("resources/abbreviations.txt");
+	assert(abvsFile.good() && "Invalid file name");
+	while (!abvsFile.eof()) {
+		std::string word;
+		abvsFile >> word;
+		abreviations.push_back(word);
+	}
+
 	int positionAcc = 0;
-	SentenceTokenizerStrategy *strat = new SentenceTokenizerStrategy({});
+	SentenceTokenizerStrategy *strat = new SentenceTokenizerStrategy(abreviations);
 	tokenizer tkz = tokenizer(strat);
 	std::vector<std::string> sentences = tkz.tokenize(doc->content());
 	for(std::vector<std::string>::iterator sentence = sentences.begin(); sentence != sentences.end(); ++sentence) {
 		TermIndex tIdx;
 		word_tokenizer_strategy *wStrat = new word_tokenizer_strategy();
-		tokenizer tkzW = tokenizer(strat);
+		tokenizer tkzW = tokenizer(wStrat);
 		std::vector<std::string> words = tkzW.tokenize(doc->content());
 		for(std::vector<std::string>::iterator word = words.begin(); word != words.end(); ++word) {
 			if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [word](const Indexer::wordFrequencyTermMod & other) { return std::get<0>(other) == *word; }) == indexer.wftms.end()) {

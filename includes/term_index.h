@@ -23,4 +23,4 @@ private:
   std::map<std::string, int> termIndexer;
 };
 
-#endif
+#endif //TERM_INDEX_H

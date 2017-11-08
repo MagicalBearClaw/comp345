@@ -39,4 +39,4 @@ private:
 
 };
 
-#endif // !QUERY_RESULT_H
+#endif //QUERY_RESULT_H

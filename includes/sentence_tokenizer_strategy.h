@@ -1,5 +1,5 @@
-#ifndef SENTENCE_TOKENIZER_strategy_H
-#define SENTENCE_TOKENIZER_strategy_H
+#ifndef SENTENCE_TOKENIZER_STRATEGY_H
+#define SENTENCE_TOKENIZER_STRATEGY_H
 
 #include <string>
 #include <vector>
@@ -16,4 +16,4 @@ private:
   std::string delimiters;
 };
 
-#endif
+#endif //SENTENCE_TOKENIZER_STRATEGY_H

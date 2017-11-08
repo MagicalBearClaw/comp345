@@ -1,0 +1,3 @@
+resources/a3data/q1.txt
+resources/a3data/q2.txt
+resources/a3data/q3.txt

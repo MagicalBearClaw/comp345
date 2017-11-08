@@ -3,18 +3,22 @@
 
 #include <tuple>
 
-#include "../includes/document.h"
+#include "../includes/index_item.h"
 #include "../includes/query_result.h"
 #include "../includes/term_index.h"
 
+/**
+ * @brief The starting point of the program
+ * 
+ * @return int 0 if all went well.
+ */
 int main();
 
 
 /**
- * The Indexer class is responsible for storing and maintaining a document index.
+ * The Indexer class is responsible for storing and maintaining a index item.
  *
  */
-//TODO this should now become an abstract base class
 class Indexer
 {
   public:
@@ -27,17 +31,17 @@ class Indexer
 	/** @brief Desctructor for Indexer class*/
 	virtual ~Indexer();
 	/**
-	 * @brief returns the number of documents in the index.
+	 * @brief returns the number of items in the index.
 	 *
-	 * This function size() returns the number of documents stored within this indexer class.
+	 * This function size() returns the number of index items stored within this indexer class.
 	 *
-	 * @return int	The number of documents in the index.
+	 * @return int	The number of index items in the index.
 	 */
 	int size();
 	/**
-	* @brief computes the tf-idf weights based on the number N of indexed documents
+	* @brief computes the tf-idf weights based on the number N of indexed index items
 	*
-	* This function normalize() computes the tf-idf weights based on the number N of indexed documents.
+	* This function normalize() computes the tf-idf weights based on the number N of indexed index items.
 	* These weights are storied inside the indexer.
 	*
 	*/
@@ -62,7 +66,7 @@ class Indexer
 	 */
 	bool isNormalized(Indexer& indexer);
 	/**
-	 * @brief function returns a vector<query result>, where each result object has a document and its score
+	 * @brief function returns a vector<query result>, where each result object has a index item and its score
 	 * 
 	 * This function query(string, int) is used to query the index with the provided string. By
 	 * default, it returns the top-10 results, but this can be overridden on a per-query basis (optional second
@@ -80,7 +84,7 @@ protected:
 	typedef std::tuple<std::string, int, double> wordFrequencyTermMod;
 	std::vector<std::tuple<Index_item*, TermIndex>> itis;
 	int documentCount; /**The number of documents in the index*/
-	
+	int maxWordLength;
 	int maxColumnSize; /**ctr used for display of count columns*/
 	bool normalized; /** Status check if the index has been normalized*/
 	std::vector<Document> documents; /** vector of all documents*/

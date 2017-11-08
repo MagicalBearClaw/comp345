@@ -3,9 +3,9 @@
 
 #include "indexer.h"
 
-
-class DocumentIndexer : public Indexer {
-/**
+class DocumentIndexer : public Indexer
+{
+	/**
 	 * @brief overloaded extractor to stream content from a file into an indexer object.
 	 * 
 	 * @param ifs input file stream
@@ -18,10 +18,16 @@ class DocumentIndexer : public Indexer {
 public:
 	// virtual void normalize();
 	virtual std::vector<query_result> query(std::string queryString, int numOfResults = 10);
+	/**
+	 * @brief Default Constructor
+	 * 
+	 */
 	DocumentIndexer();
+	/**
+	 * @brief Default Deconstructor
+	 * 
+	 */
 	~DocumentIndexer();
-private:
-	// tuple of words their index_item frequency and the modifier to compute the weight of a term
 
 	// virtual int calculateDocumentFrequency(std::string term);
 	/**
@@ -31,7 +37,7 @@ private:
 	* @param word the word to caluclate the frequency for
 	* @return int the documentFrequency for the specified word
 	*/
-	int maxWordLength; /**Ctr used for display of word column*/
+	// virtual int calculateDocumentFrequency(std::string term);
 };
 
 #endif //DOCUMENT_INDEXER_H

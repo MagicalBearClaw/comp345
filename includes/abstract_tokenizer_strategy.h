@@ -1,5 +1,5 @@
-#ifndef I_TOKENIZER_STATEGY_H
-#define I_TOKENIZER_STATEGY_H
+#ifndef ABSTRACT_TOKENIZER_STRATEGY_H
+#define ABSTRACT_TOKENIZER_STRATEGY_H
 
 #include <string>
 #include <vector>
@@ -24,4 +24,4 @@ class abstract_tokenizer_strategy
 	virtual ~abstract_tokenizer_strategy() {}
 };
 
-#endif
+#endif //ABSTRACT_TOKENIZER_STRATEGY_H

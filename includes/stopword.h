@@ -21,7 +21,11 @@ class StopWord {
    */
   friend std::ostream& operator<<(std::ostream& stream, StopWord& sw);
 public:
-  StopWord(); /**Creates an empty StopWord object*/
+  /**
+   * @brief default constructor for StopWord
+   * Creates an empty StopWord object
+   */
+  StopWord(); 
   /**
    * @brief Creates a StopWord object from a file
    * 

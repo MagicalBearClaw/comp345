@@ -13,8 +13,8 @@ Fall 2017 (Section N)
 * g++ 6.3.0 
 * Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24210 for x86
 * stopwords.txt for the stopwords
-* INPUT: file.txt, file2.txt, file3.txt
-* INPUT: a3data (contains 3 query files and multiple source documents)
+* INPUT: index.txt, file1.txt, file2.txt, file3.txt | a3index.txt , a3files.txt | abbreviations.txt
+* INPUT: a3data (contains 3 query files [qx.txt] and 30 source documents [qxdx.file])
 * OUTPUT: output.txt
 * Documentation generated via Doxygen 1.8.13
 
