@@ -56,5 +56,7 @@ int countWords(std::string text) {
       ++ctr;
     }
 	} while (next != std::string::npos);
+
+	return ctr;
 }
 

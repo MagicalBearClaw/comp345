@@ -1,7 +1,7 @@
 #include "..\includes\tokenizer.h"
 #include "..\includes\util.h"
 
-tokenizer::tokenizer(I_tokenizer_strategy * strat) : strategy(strat)
+tokenizer::tokenizer(abstract_tokenizer_strategy * strat) : strategy(strat)
 {
 }
 
@@ -21,7 +21,7 @@ std::vector<std::string> tokenizer::tokenize(const std::string& text)
 	return std::vector<std::string>();
 }
 
-void tokenizer::setTokenizerstrategy(I_tokenizer_strategy * strat)
+void tokenizer::setTokenizerstrategy(abstract_tokenizer_strategy * strat)
 {
 	if (strat)
 		SAFE_DELETE(strategy)

@@ -1,12 +1,12 @@
 #include <algorithm>
-#include "../includes/default_tokenizer_strategy.h"
+#include "../includes/word_tokenizer_strategy.h"
 
-default_tokenizer_strategy::default_tokenizer_strategy(const std::string & delimiters) : delimiters(delimiters)
+word_tokenizer_strategy::word_tokenizer_strategy(const std::string & delimiters) : delimiters(delimiters)
 {
 }
 
 
-std::vector<std::string> default_tokenizer_strategy::tokenize(const std::string & text)
+std::vector<std::string> word_tokenizer_strategy::tokenize(const std::string & text)
 {
 	size_t current = 0;
 	size_t next = -1;

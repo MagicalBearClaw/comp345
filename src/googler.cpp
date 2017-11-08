@@ -4,15 +4,16 @@
 #include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include "../includes/document_indexer.h"
 int main()
 {
 	int numOfResults = 10;
-	Indexer *idx = new Indexer();
+	Indexer *idx = new DocumentIndexer();
 	std::ifstream ifs("resources/index.txt");
 	assert(ifs.good() && "Invalid file name");
 	while (!ifs.eof())
 	{
-		ifs >> *idx;
+		ifs >> *(DocumentIndexer*)idx;
 	}
 
 	std::string buffer = "";
