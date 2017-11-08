@@ -1,5 +1,5 @@
-#include "..\includes\tokenizer.h"
-#include "..\includes\util.h"
+#include "../includes/tokenizer.h"
+#include "../includes/util.h"
 
 tokenizer::tokenizer(abstract_tokenizer_strategy * strat) : strategy(strat)
 {

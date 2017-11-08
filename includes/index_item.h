@@ -20,26 +20,36 @@ class Index_item
    * @param indexItem An object of type Index_item which will have its contents output to the ostream.
    * @return std::ostream& returns an output stream object in order to allow for function chainning.
    */
-    friend std::ostream& operator<<(std::ostream& ostream, Index_item& indexItem);
-  public:
+  friend std::ostream &operator<<(std::ostream &ostream, Index_item &indexItem);
 
-    virtual std::string content() const;
-    virtual std::string name() const;
-    /**
-     * @brief The number of words in the sentence
+public:
+  /**
+     * @brief Returns the content for an index item.
      * 
-     * @return int number of words in sentence
+     * @return std::string the content of index item
      */
-    virtual int size() const = 0;
-
-    /**
+  virtual std::string content() const;
+  /**
+     * @brief Returns the name of an index item
+     * 
+     * @return std::string the name of index item
+     */
+  virtual std::string name() const;
+  /**
+     * @brief Returns the size of an index item
+     * 
+     * @return int size of item
+     */
+  virtual int size() const = 0;
+  /**
      * @brief Deconstructor for all classes which implement this abstract base class.
      */
-    virtual ~Index_item() {}
-  protected:
-    std::string _name;    /**The name of the index item*/
-    std::string _content; /**The contents of the index item*/
-    int _size; /**The size of the index item*/
+  virtual ~Index_item() {}
+
+protected:
+  std::string _name;    /**The name of the index item*/
+  std::string _content; /**The contents of the index item*/
+  int _size;            /**The size of the index item*/
 };
 
 #endif //INDEX_ITEM_H

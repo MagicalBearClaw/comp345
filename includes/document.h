@@ -1,20 +1,20 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include <string>
 #include <map>
 #include <vector>
 
 #include "stopword.h"
-
-#include "Index_item.h"
+#include "index_item.h"
 
 /**
- * Class used to store the contents of a file.
+ * @brief A Document is is used to store the contents of a fie.
  * This class also can be used to fetch additional metadata about the 
  * file such as the name and the size (in characters) of the file.
+ * @see Index_item
  */
-class Document : public Index_item {
+class Document : public Index_item
+{
   /**
    * Operator overload for debug output 
    * 
@@ -25,11 +25,15 @@ class Document : public Index_item {
    * 
    * @return std::ostream
    */
-  friend std::ostream& operator<<(std::ostream& stream, Document& doc);
+  friend std::ostream &operator<<(std::ostream &stream, Document &doc);
+
 public:
-  Document(); /**Constructor to create empty document*/
   /**
-   * Constructor for creating a documet based on an existing file name.
+   * @brief Constructor to create empty document
+   */
+  Document(); 
+  /**
+   * Overloaded constructor for creating a documet based on an existing file name.
    * 
    * This constructor will cause the application to terminate if it is given
    * a non existant file name.
@@ -37,11 +41,14 @@ public:
    * @param fileName the name of the file the Document will be created from
    */
   Document(std::string fileName);
-  ~Document(); /**Destructor for document class (does nothing so far)*/
+  /**
+   * @brief Destructor for document class (does nothing so far)
+   */
+  ~Document();
   /**
    * Gets the size of the document
    * 
-   * Gets the size of the contents of the document based on character count
+   * Returns the size of the contents of the document based on character count.
    * 
    * @return int The number of characters in the document
    */
