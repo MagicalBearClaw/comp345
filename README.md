@@ -10,7 +10,8 @@ Fall 2017 (Section N)
 * ISO C++11
 * Visual Studio 2015/2017, Visual Studio Code v1.17+
 * Also use g++ and make from cmdline.
-* g++ 6.3.0 
+* g++ 6.3.0 32-bit
+* g++ 7.2.0 64-bit
 * Microsoft (R) C/C++ Optimizing Compiler Version 19.00.24210 for x86
 * stopwords.txt for the stopwords
 * INPUT: index.txt, file1.txt, file2.txt, file3.txt | a3index.txt , a3files.txt | abbreviations.txt

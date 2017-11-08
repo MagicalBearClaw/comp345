@@ -15,6 +15,10 @@
 // }
 std::ostream & operator<<(std::ostream &ios, Sentence_indexer &indexer)
 {
+	for (std::vector<Indexer::itemTermIndex>::iterator element =  indexer.itis.begin(); element != indexer.itis.end(); ++element) {
+		ios << std::get<0>(*element)->content();
+	}
+	ios << std::endl;
 	return ios;
 }
 void operator >> (Index_item *doc, Sentence_indexer &indexer)
@@ -106,7 +110,7 @@ std::vector<query_result> Sentence_indexer::query(std::string queryString, int n
 	int totalLength = 0;
 	std::vector<query_result> finalResults;
 	
-	// remove unecessary results
+	// removes unecessary results
 	for(std::vector<query_result>::iterator result = results.begin(); result != results.end() && totalLength < numOfWords; ++result) {
 		finalResults.push_back(*result);
 		totalLength += result->getItem()->size();

@@ -5,7 +5,7 @@
 
 class Sentence_indexer : public Indexer{
 	// friend std::ifstream &operator >> (std::ifstream &ifs, Sentence_indexer &indexer);
-	// friend std::ostream & operator<<(std::ostream &ios, Sentence_indexer &indexer);
+	friend std::ostream & operator<<(std::ostream &ios, Sentence_indexer &indexer);
 	friend void operator >> (Index_item* doc, Sentence_indexer &indexer);
 public:
 	// typedef std::tuple<std::string, int, double> wordFrequencyTermMod;
