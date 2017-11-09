@@ -55,7 +55,7 @@ class Indexer
 	 *
 	 * @return Document*	The selected document object as requested by index.
 	 */
-	Index_item* operator[](int position);
+IndexItem* operator[](int position);
 	
 	/**
 	 * @brief Returns if the provided inedxer is normalized
@@ -79,10 +79,10 @@ class Indexer
 	virtual std::vector<query_result> query(std::string queryString, int numOfResults = 10) = 0;
 protected:
 	virtual int calculateDocumentFrequency(std::string term);
-	// the index_item and it's associated TermIndex (meta data to compute weight)
-	typedef std::tuple<Index_item*, TermIndex>  itemTermIndex;
+	// the IndexItem and it's associated TermIndex (meta data to compute weight)
+	typedef std::tuple<IndexItem*, TermIndex>  itemTermIndex;
 	typedef std::tuple<std::string, int, double> wordFrequencyTermMod;
-	std::vector<std::tuple<Index_item*, TermIndex>> itis;
+	std::vector<std::tuple<IndexItem*, TermIndex>> itis;
 	int documentCount; /**The number of documents in the index*/
 	int maxWordLength;
 	int maxColumnSize; /**ctr used for display of count columns*/

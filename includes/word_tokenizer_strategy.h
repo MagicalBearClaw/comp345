@@ -10,7 +10,7 @@
  * 
  * The tokenization method for spliting a string of words based on a sequence of delimiterd
  */
-class word_tokenizer_strategy : public abstract_tokenizer_strategy
+class WordTokenizerStrategy : public AbstractTokenizerStrategy
 {
 public:
 	/**
@@ -19,7 +19,7 @@ public:
 		 * defaults to the set of punction characters seen below.
 		 * i.e  ,\t-':!().?\";–—~{}/*\n\t\r
 		 */
-	word_tokenizer_strategy(const std::string &delimiters = " ,\t-':!().?\";–—~{}/*\n\t\r");
+	WordTokenizerStrategy(const std::string &delimiters = " ,\t-':!().?\";–—~{}/*\n\t\r");
 
 	/**
 		* Breaks up a string into tokens.

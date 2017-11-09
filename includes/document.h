@@ -11,9 +11,9 @@
  * @brief A Document is is used to store the contents of a fie.
  * This class also can be used to fetch additional metadata about the 
  * file such as the name and the size (in characters) of the file.
- * @see Index_item
+ * @see IndexItem
  */
-class Document : public Index_item
+class Document : public IndexItem
 {
   /**
    * Operator overload for debug output 

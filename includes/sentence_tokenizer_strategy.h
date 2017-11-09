@@ -6,7 +6,7 @@
 
 #include "abstract_tokenizer_strategy.h"
 
-class SentenceTokenizerStrategy : public abstract_tokenizer_strategy {
+class SentenceTokenizerStrategy : public AbstractTokenizerStrategy {
 public:
   SentenceTokenizerStrategy(std::vector<std::string> abr, const std::string &delimiters = ".?!");
   virtual ~SentenceTokenizerStrategy();

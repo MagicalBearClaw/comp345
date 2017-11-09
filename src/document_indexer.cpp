@@ -44,7 +44,7 @@ std::ifstream &operator>>(std::ifstream &ifs, DocumentIndexer &indexer)
 
 void operator>>(Document &doc, DocumentIndexer &indexer)
 {
-	word_tokenizer_strategy *strat = new word_tokenizer_strategy();
+	WordTokenizerStrategy *strat = new WordTokenizerStrategy();
 	tokenizer tkzr = tokenizer(strat);
 	TermIndex tIdx;
 	std::vector<std::string> v = tkzr.tokenize(doc.content());
@@ -210,7 +210,7 @@ std::vector<query_result> DocumentIndexer::query(std::string queryString, int nu
 	}
 	std::vector<query_result> results;
 	TermIndex queryDoc;
-	word_tokenizer_strategy *strat = new word_tokenizer_strategy();
+	WordTokenizerStrategy *strat = new WordTokenizerStrategy();
 	tokenizer tkzr = tokenizer(strat);
 	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
 	std::vector<wordFrequencyTermMod> commonWords;

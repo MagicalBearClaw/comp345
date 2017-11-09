@@ -11,8 +11,8 @@
  * It does so by using a provided tokenizing strategy. if there is not 
  * a statergy that is provided, a default strategy will be used.
  * The tokenizer class is responsible of mangining the lifetime of a given strategy.
- * @see abstract_tokenizer_strategy
- * @see word_tokenizer_strategy
+ * @see AbstractTokenizerStrategy
+ * @see WordTokenizerStrategy
  * @see sentence_tokenzier_strategy
  */
 class tokenizer
@@ -31,9 +31,9 @@ class tokenizer
 	* Creates a new instance of tokenizer. 
 	* @param strat The tokenizing strategy to use. if none specified, the
 	* default strategy(word) will be used.
-	* @see word_tokenizer_strategy
+	* @see WordTokenizerStrategy
 	*/
-	tokenizer(abstract_tokenizer_strategy *strat = new word_tokenizer_strategy());
+	tokenizer(AbstractTokenizerStrategy *strat = new WordTokenizerStrategy());
 	/**
 	* Deconstruct the tokenizer instance, freeing the strategy.
 	*/
@@ -49,10 +49,10 @@ class tokenizer
 	* Note: The previous strategy will be freed.
 	* @param strat The new strategy to be used to tokenize.
 	*/
-	void setTokenizerstrategy(abstract_tokenizer_strategy *strat);
+	void setTokenizerstrategy(AbstractTokenizerStrategy *strat);
 
   private:
-	abstract_tokenizer_strategy *strategy;
+	AbstractTokenizerStrategy *strategy;
 };
 
 #endif //TOKENIZER_H
