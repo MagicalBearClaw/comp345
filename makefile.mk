@@ -67,4 +67,6 @@ $(OUTDIR)/document_indexer.o : $(SRC)/document_indexer.cpp $(INCLUDES)/document_
 $(OUTDIR)/sentence_indexer.o : $(SRC)/sentence_indexer.cpp $(INCLUDES)/sentence_indexer.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/sentence_indexer.cpp -o $(OUTDIR)/sentence_indexer.o
 	
-
+$(OUTDIR)/index_exception.o : $(SRC)/index_exception.cpp $(INCLUDES)/index_exception.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/index_exception.cpp -o $(OUTDIR)/index_exception.o
+	
