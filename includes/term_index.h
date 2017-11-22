@@ -15,8 +15,8 @@ public:
 
   void indexWord(std::string& word);
   int operator[](const std::string& word);
-  double termWeight(std::string& word, double documentModifier);
-  void normalize(const std::vector<std::tuple<std::string, int, double>> &wftms, StopWord *sw = nullptr);
+  double termWeight(std::string word, double documentModifier);
+  void normalize(const std::unordered_map<std::string, std::tuple<std::string, int, double>> &wftms, StopWord *sw = nullptr);
   double docNorm();
 private:
   double norm;

@@ -16,6 +16,7 @@ int main()
 		ifs >> *(MovieIndexer*)idx;
 	}
 	ifs.close();
+	idx->normalize(); // normalize before accepting queries
 	std::string buffer = "";
 	while (true)
 	{
@@ -27,7 +28,7 @@ int main()
 		else if (buffer == "!q")
 			break;
 
-		idx->normalize();
+		// idx->normalize();
 		std::vector<query_result> ranks = idx->query(buffer, numOfResults);
 		int maxLength = ranks[0].getItem()->name().size();
 		std::sort(ranks.begin(), ranks.end(), [](query_result a, query_result b)

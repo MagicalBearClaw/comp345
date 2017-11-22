@@ -18,32 +18,34 @@ int TermIndex::operator[](const std::string& word)
 	return termIndexer[word];
 }
 
-double TermIndex::termWeight(std::string& word, double documentFrequencyModifier)
+double TermIndex::termWeight(std::string word, double documentFrequencyModifier)
 {
 	int termCount = (*this)[word];
 	return termCount ? (1 + log(termCount)) * documentFrequencyModifier : 0.0;
 }
 
-void TermIndex::normalize(const std::vector<std::tuple<std::string, int, double>> &wftms, StopWord *sw)
+void TermIndex::normalize(const std::unordered_map<std::string, std::tuple<std::string, int, double>> &wftms, StopWord *sw)
 {
 	double normAcc = 0.0;
 	// check if a stopword reference is given
 	if (sw == nullptr)
 	{
-		for (std::vector<std::tuple<std::string, int, double>>::const_iterator i = wftms.begin(); i != wftms.end(); ++i)
+		for (std::unordered_map<std::string, int>::const_iterator i = termIndexer.begin(); i != termIndexer.end(); ++i)
 		{
-			std::string w = std::get<0>(*i);
-			normAcc += pow(termWeight(w, std::get<1>(*i)), 2);
+			// std::string w = std::get<0>(*i);
+			const std::tuple<std::string, int, double> wftm = (wftms.find(i->first))->second;
+			normAcc += pow(termWeight(i->first, std::get<1>(wftm)), 2);
 		}
 	}
 	else
 	{
-		for (std::vector<std::tuple<std::string, int, double>>::const_iterator i = wftms.begin(); i != wftms.end(); ++i)
+		for (std::unordered_map<std::string, int>::const_iterator i = termIndexer.begin(); i != termIndexer.end(); ++i)
 		{
-			std::string w = std::get<0>(*i);
-			if (!sw->operator()(std::get<0>(*i)))
+			// std::string w = std::get<0>(*i);
+			if (!sw->operator()(i->first))
 			{
-				normAcc += pow(termWeight(w, std::get<1>(*i)), 2);
+				const std::tuple<std::string, int, double> wftm = (wftms.find(i->first))->second;
+				normAcc += pow(termWeight(i->first, std::get<1>(wftm)), 2);
 			}
 		}
 	}

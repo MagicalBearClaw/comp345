@@ -44,7 +44,7 @@ public:
 private:
 	std::string getName(const std::string& summary, int id, int start);
 	std::string getReleaseDate(const std::string& summary, int id, int start);
-	std::unordered_map<int, std::string> MovieIndexer::buildMovieSummaryIndx(std::ifstream& ifsPlots);
+	std::unordered_map<int, std::string> buildMovieSummaryIndx(std::ifstream& ifsPlots);
 	Movie* getMovieMetaInformationByName(const std::string& movieName);
 	std::unordered_map<int, std::string> sumIndx;
 	std::vector<Movie*> getMovies(const std::unordered_map<int, std::string>& sumIdx, std::ifstream& movieMetaInfo);

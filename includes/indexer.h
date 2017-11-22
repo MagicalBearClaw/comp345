@@ -86,7 +86,7 @@ protected:
 	std::vector<double> docTermModifiers; /**log(documnetCount/documentFrequency)*/
 	std::vector<int> docTermFrequency; /**how many documents contain the word*/
 	std::vector<TermIndex> documentIndices;
-	std::vector<wordFrequencyTermMod> wftms;
+	std::unordered_map<std::string, wordFrequencyTermMod> wftms;
 
 };
 

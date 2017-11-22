@@ -1,9 +1,9 @@
 OUTDIR = bin
 SRC = src
 INCLUDES = includes
-OBJS = $(OUTDIR)/indexer.o $(OUTDIR)/sentence_tokenizer_strategy.o $(OUTDIR)/word_tokenizer_strategy.o $(OUTDIR)/tokenizer.o $(OUTDIR)/document.o $(OUTDIR)/sentence.o $(OUTDIR)/stopword.o $(OUTDIR)/util.o $(OUTDIR)/index_item.o $(OUTDIR)/term_index.o $(OUTDIR)/query_result.o $(OUTDIR)/document_indexer.o $(OUTDIR)/sentence_indexer.o
+OBJS = $(OUTDIR)/indexer.o $(OUTDIR)/sentence_tokenizer_strategy.o $(OUTDIR)/word_tokenizer_strategy.o $(OUTDIR)/tokenizer.o $(OUTDIR)/document.o $(OUTDIR)/sentence.o $(OUTDIR)/stopword.o $(OUTDIR)/util.o $(OUTDIR)/index_item.o $(OUTDIR)/term_index.o $(OUTDIR)/query_result.o $(OUTDIR)/document_indexer.o $(OUTDIR)/sentence_indexer.o $(OUTDIR)/movie_indexer.o $(OUTDIR)/movie.o
 CC = g++
-DEBUG = -g
+DEBUG = -O
 CFLAGS = -c $(DEBUG)
 FLAGS = -std=c++11
 
@@ -15,6 +15,9 @@ googler.exe: $(OBJS) $(OUTDIR)/googler.o
 
 summarizer.exe: $(OBJS) $(OUTDIR)/summarizer.o
 	$(CC) $(DEBUG) $(FLAGS) $(OBJS) $(OUTDIR)/summarizer.o -o summarizer.exe
+
+recommender.exe: $(OBJS) $(OUTDIR)/recommender.o
+	$(CC) $(DEBUG) $(FLAGS) $(OBJS) $(OUTDIR)/recommender.o -o recommender.exe
 
 $(OUTDIR)/indexing.o : $(SRC)/indexing.cpp $(INCLUDES)/indexing.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/indexing.cpp -o $(OUTDIR)/indexing.o
@@ -67,4 +70,11 @@ $(OUTDIR)/document_indexer.o : $(SRC)/document_indexer.cpp $(INCLUDES)/document_
 $(OUTDIR)/sentence_indexer.o : $(SRC)/sentence_indexer.cpp $(INCLUDES)/sentence_indexer.h
 	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/sentence_indexer.cpp -o $(OUTDIR)/sentence_indexer.o
 	
+$(OUTDIR)/recommender.o : $(SRC)/recommender.cpp
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/recommender.cpp -o $(OUTDIR)/recommender.o
+	
+$(OUTDIR)/movie_indexer.o : $(SRC)/movie_indexer.cpp $(INCLUDES)/movie_indexer.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/movie_indexer.cpp -o $(OUTDIR)/movie_indexer.o
 
+$(OUTDIR)/movie.o : $(SRC)/movie.cpp $(INCLUDES)/movie.h
+	$(CC) $(CFLAGS) $(FLAGS) $(SRC)/movie.cpp -o $(OUTDIR)/movie.o

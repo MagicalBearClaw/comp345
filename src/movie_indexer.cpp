@@ -55,11 +55,12 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 	ifsPlots.close();
 
 	indexer.movies = indexer.getMovies(indexer.sumIndx, ifsMeta);
-
+	std::cout << "Loaded all movies" << std::endl;
 	for (std::vector<Movie*>::const_iterator it = indexer.movies.begin(); it != indexer.movies.end(); ++it)
 	{
 		if (*it)
 		{
+			std::cout << "Indexing: " << (*it)->name() << std::endl;
 			*(*it) >> indexer;
 		}
 	}
@@ -79,21 +80,25 @@ void operator >> (Movie &movie, MovieIndexer &indexer)
 
 		//find_if(table.begin(), table.end(), [&new_id](const entry &arg) {
 		//return arg.first == new_id; }) !=
-		if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const MovieIndexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; }) == indexer.wftms.end())
+		// linear search could be improved
+		// if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const MovieIndexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; }) == indexer.wftms.end())
+		if (indexer.wftms.find(*i) != indexer.wftms.end())
 		{
-			if (i->length() > indexer.maxWordLength)
-			{
-				indexer.maxWordLength = i->length();
-			}
-			indexer.wftms.push_back(make_tuple(*i, 0, 0)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+			// if (i->length() > indexer.maxWordLength)
+			// {
+			// 	indexer.maxWordLength = i->length();
+			// }
+			std::get<1>(indexer.wftms[*i]) += 1;
+		} else {
+			indexer.wftms[*i] = std::make_tuple(*i, 1, 0);
 		}
 		std::string w = *i;
 		tIdx.indexWord(w);
 		// check if word count size is bigger than half the column
-		if (std::to_string(tIdx[*i]).length() > indexer.maxColumnSize / 2 + indexer.maxColumnSize % 2 + 1)
-		{
-			indexer.maxColumnSize = std::to_string(tIdx[*i]).length() * 2 + 2;
-		}
+		// if (std::to_string(tIdx[*i]).length() > indexer.maxColumnSize / 2 + indexer.maxColumnSize % 2 + 1)
+		// {
+		// 	indexer.maxColumnSize = std::to_string(tIdx[*i]).length() * 2 + 2;
+		// }
 	}
 	indexer.itis.push_back(std::make_tuple(&movie, tIdx)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
 	indexer.docNames.push_back(movie.name());
@@ -122,14 +127,15 @@ std::vector<query_result> MovieIndexer::query(std::string queryString, int numOf
 	tokenizer tkzr = tokenizer(strat);
 	std::vector<std::string> queryWords = tkzr.tokenize(movie->content());
 	std::vector<wordFrequencyTermMod> commonWords;
+	//re-indexing an indexed movie summary
 	// std::vector<double> commonDocTermModifiers;
 	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i)
 	{
-		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [i](const wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; });
+		std::unordered_map<std::string, wordFrequencyTermMod>::iterator element = wftms.find(*i);
 		if (element != wftms.end())
 		{
-			queryDoc.indexWord(std::get<0>(*element));
-			commonWords.push_back(*element);
+			queryDoc.indexWord(std::get<0>(element->second));
+			commonWords.push_back(element->second);
 			// commonDocTermModifiers.push_back(docTermModifiers[position]);
 		}
 	}

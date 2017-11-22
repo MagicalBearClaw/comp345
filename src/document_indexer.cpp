@@ -35,7 +35,7 @@ std::ifstream &operator>>(std::ifstream &ifs, DocumentIndexer &indexer)
 		{
 			indexer.maxColumnSize = docName.length();
 		}
-		Document *doc = new Document(); // probably memory leak make destructor for indexer clean this up
+		Document *doc = new Document(docName); // probably memory leak make destructor for indexer clean this up
 		*doc >> indexer;											 // "stream" document into indexer
 	}
 
@@ -53,13 +53,15 @@ void operator>>(Document &doc, DocumentIndexer &indexer)
 
 		//find_if(table.begin(), table.end(), [&new_id](const entry &arg) {
 		//return arg.first == new_id; }) !=
-		if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [i](const DocumentIndexer::wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; }) == indexer.wftms.end())
+		if (indexer.wftms.find(*i) != indexer.wftms.end())
 		{
-			if (i->length() > indexer.maxWordLength)
-			{
-				indexer.maxWordLength = i->length();
-			}
-			indexer.wftms.push_back(make_tuple(*i, 0, 0)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+			// if (i->length() > indexer.maxWordLength)
+			// {
+			// 	indexer.maxWordLength = i->length();
+			// }
+			std::get<1>(indexer.wftms[*i]) += 1;
+		} else {
+			indexer.wftms[*i] = std::make_tuple(*i, 1, 0);
 		}
 		std::string w = *i;
 		tIdx.indexWord(w);
@@ -116,20 +118,20 @@ std::ostream &operator<<(std::ostream &ios, DocumentIndexer &indexer)
 	totals.resize(columnCount);
 
 	//main table display
-	for (std::vector<DocumentIndexer::wordFrequencyTermMod>::iterator it = indexer.wftms.begin(); it != indexer.wftms.end(); ++it)
+	for (std::unordered_map<std::string, DocumentIndexer::wordFrequencyTermMod>::iterator it = indexer.wftms.begin(); it != indexer.wftms.end(); ++it)
 	{
-		std::string currentWord = std::get<0>(*it);
+		std::string currentWord = std::get<0>(it->second);
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
 		// int position = std::distance(indexer.allWords.begin(), it);
-		double modifier = std::get<2>(*it);
+		double modifier = std::get<2>(it->second);
 		for (std::vector<Indexer::itemTermIndex>::iterator docs = indexer.itis.begin(); docs != indexer.itis.end(); ++docs)
 		{
 			totals[indx] += std::get<1>(*docs)[currentWord];
-			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << std::get<1>(*docs)[currentWord] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength % 2) << std::get<1>(*docs).termWeight(currentWord, std::get<2>(*it));
+			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << std::get<1>(*docs)[currentWord] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength % 2) << std::get<1>(*docs).termWeight(currentWord, std::get<2>(it->second));
 			++indx;
 		}
-		std::cout << " * " << std::right << std::setw(maxColumnLength) << std::get<1>(*it);
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << std::get<1>(it->second);
 		std::cout << " *" << std::endl;
 	}
 	drawLine(horizontalLine);
@@ -167,24 +169,24 @@ std::ostream &operator<<(std::ostream &ios, DocumentIndexer &indexer)
 
 	StopWord sw = StopWord("resources/stopwords.txt");
 	//main table display
-	for (std::vector<DocumentIndexer::wordFrequencyTermMod>::iterator it = indexer.wftms.begin(); it != indexer.wftms.end(); ++it)
+	for (std::unordered_map<std::string, DocumentIndexer::wordFrequencyTermMod>::iterator it = indexer.wftms.begin(); it != indexer.wftms.end(); ++it)
 	{
-		if (sw(std::get<0>(*it)))
+		if (sw(std::get<0>(it->second)))
 		{
 			continue;
 		}
-		std::string currentWord = std::get<0>(*it);
+		std::string currentWord = std::get<0>(it->second);
 		std::cout << "* " << std::left << std::setw(maxWordLength) << currentWord;
 		int indx = 0;
 		// int position = std::distance(indexer.allWords.begin(), it);
-		double modifier = std::get<2>(*it);
+		double modifier = std::get<2>(it->second);
 		for (std::vector<Indexer::itemTermIndex>::iterator docs = indexer.itis.begin(); docs != indexer.itis.end(); ++docs)
 		{
 			totals[indx] += std::get<1>(*docs)[currentWord];
-			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << std::get<1>(*docs)[currentWord] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength % 2) << std::get<1>(*docs).termWeight(currentWord, std::get<2>(*it));
+			std::cout << " * " << std::right << std::setw(maxColumnLength / 2 - 1) << std::get<1>(*docs)[currentWord] << "|" << std::right << std::setw(maxColumnLength / 2 + maxColumnLength % 2) << std::get<1>(*docs).termWeight(currentWord, std::get<2>(it->second));
 			++indx;
 		}
-		std::cout << " * " << std::right << std::setw(maxColumnLength) << std::get<1>(*it);
+		std::cout << " * " << std::right << std::setw(maxColumnLength) << std::get<1>(it->second);
 		std::cout << " *" << std::endl;
 	}
 	drawLine(horizontalLine);
@@ -218,11 +220,11 @@ std::vector<query_result> DocumentIndexer::query(std::string queryString, int nu
 	// std::vector<double> commonDocTermModifiers;
 	for (std::vector<std::string>::const_iterator i = queryWords.begin(); i != queryWords.end(); ++i)
 	{
-		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [i](const wordFrequencyTermMod &arg) { return std::get<0>(arg) == *i; });
+		std::unordered_map<std::string, wordFrequencyTermMod>::iterator element = wftms.find(*i);
 		if (element != wftms.end())
 		{
-			queryDoc.indexWord(std::get<0>(*element));
-			commonWords.push_back(*element);
+			queryDoc.indexWord(std::get<0>(element->second));
+			commonWords.push_back(element->second);
 			// commonDocTermModifiers.push_back(docTermModifiers[position]);
 		}
 	}
