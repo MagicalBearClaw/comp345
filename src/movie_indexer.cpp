@@ -4,6 +4,7 @@
 #include "../includes/tokenizer.h"
 #include "../includes/movie.h"
 #include "../includes/index_item.h"
+#include "../includes/index_exception.h"
 
 #include <assert.h>
 #include <iostream>
@@ -36,6 +37,7 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 	std::string summariesDoc;
 	std::string lines[2];
 	int i = 0;
+	std::cout << "Loading Files..." << std::endl;
 	while (!ifs.eof())
 	{
 		lines[i] = crawlToDelimiter(ifs, "\n");
@@ -103,7 +105,7 @@ void operator >> (Movie &movie, MovieIndexer &indexer)
 		// 	indexer.maxColumnSize = std::to_string(tIdx[*i]).length() * 2 + 2;
 		// }
 	}
-	indexer.itis.push_back(std::make_tuple(&movie, tIdx)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
+	indexer.itis.push_back(std::make_tuple(&movie, tIdx));
 	indexer.docNames.push_back(movie.name());
 	++indexer.documentCount;
 	indexer.normalized = false;
@@ -111,7 +113,9 @@ void operator >> (Movie &movie, MovieIndexer &indexer)
 
 std::ostream &operator<<(std::ostream &ios, MovieIndexer &indexer)
 {
-	// return debug info
+	ios << "Movie Indexer Debug Info " << std::endl;
+	ios << "Number of movies: " << indexer.itis.size() << std::endl;
+	//add more debug info
 	return ios;
 }
 
@@ -222,8 +226,10 @@ Movie* MovieIndexer::getMovieMetaInformationByName(const std::string& movieName)
 		Movie *movie = dynamic_cast<Movie *>(std::get<0>(itis[i]));
 		if (movie->name() == movieName)
 			return movie;
-	}
-
+		}
+		
+	//Movie not found matching query
+	throw IndexException();
 	return nullptr;
 }
 

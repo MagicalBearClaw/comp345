@@ -1,6 +1,5 @@
-#ifndef SUMMARIZER_H
-#define SUMMARIZER_H
-
+#ifndef RECOMMENDER_H
+#define RECOMMENDER_H
 /**
  * @brief Main entry point for the program.
  * 
@@ -8,4 +7,4 @@
  */
 int main();
 
-#endif // SUMMARIZER_H
+#endif //RECOMMENDER_H

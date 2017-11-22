@@ -8,9 +8,9 @@
 #include "index_item.h"
 
 /**
-* @brief A Document is is used to store the contents of a fie.
+* @brief A Movie is is used to store the contents of a movie.
 * This class also can be used to fetch additional metadata about the
-* file such as the name and the size (in characters) of the file.
+* movie such as the name size and release date.
 * @see Index_item
 */
 class Movie : public Index_item
@@ -29,28 +29,28 @@ class Movie : public Index_item
 
 public:
 	/**
-	* @brief Constructor to create empty document
+	* @brief Constructor to create empty Movie
 	*/
 	Movie();
 	/**
-	* Overloaded constructor for creating a documet based on an existing file name.
+	* Overloaded constructor for creating a movie based on its content
 	*
-	* This constructor will cause the application to terminate if it is given
-	* a non existant file name.
-	*
-	* @param fileName the name of the file the Document will be created from
+	* @param id unique identifer for each movie
+	* @param name the name of the movie
+	* @param content the summary of the movie
+	* @param release_date the release date of the movie
 	*/
 	Movie(int id, const std::string& name, const std::string& content, const std::string& release_date);
 	/**
-	* @brief Destructor for document class (does nothing so far)
+	* @brief Destructor for movie class (does nothing so far)
 	*/
 	~Movie();
 	/**
-	* Gets the size of the document
+	* Gets the size of the movie
 	*
-	* Returns the size of the contents of the document based on character count.
+	* Returns the size of the summary of the movie
 	*
-	* @return int The number of characters in the document
+	* @return int The number of characters in the movie description
 	*/
 	int size() const override;
 
