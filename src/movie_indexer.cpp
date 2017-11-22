@@ -55,12 +55,12 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 	ifsPlots.close();
 
 	indexer.movies = indexer.getMovies(indexer.sumIndx, ifsMeta);
-	std::cout << "Loaded all movies" << std::endl;
+	std::cout << "Indexing movies!" << std::endl;
 	for (std::vector<Movie*>::const_iterator it = indexer.movies.begin(); it != indexer.movies.end(); ++it)
 	{
 		if (*it)
 		{
-			std::cout << "Indexing: " << (*it)->name() << std::endl;
+			// std::cout << "Indexing: " << (*it)->name() << std::endl;
 			*(*it) >> indexer;
 		}
 	}
@@ -75,9 +75,12 @@ void operator >> (Movie &movie, MovieIndexer &indexer)
 	tokenizer tkzr = tokenizer(strat);
 	TermIndex tIdx;
 	std::vector<std::string> v = tkzr.tokenize(movie.content());
+	StopWord sw = StopWord("resources/stopwords.txt");
 	for (std::vector<std::string>::const_iterator i = v.begin(); i != v.end(); ++i)
 	{
-
+		if(sw(*i)) {
+			continue;
+		}
 		//find_if(table.begin(), table.end(), [&new_id](const entry &arg) {
 		//return arg.first == new_id; }) !=
 		// linear search could be improved

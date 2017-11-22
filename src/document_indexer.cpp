@@ -83,8 +83,8 @@ std::ostream &operator<<(std::ostream &ios, DocumentIndexer &indexer)
 	{
 		indexer.normalize();
 	}
-	int maxColumnLength = indexer.maxColumnSize;
-	int maxWordLength = indexer.maxWordLength;
+	int maxColumnLength = 30;// indexer.maxColumnSize;
+	int maxWordLength = 45;// indexer.maxWordLength;
 	std::string title = "dictionary";
 	int columnCount = indexer.documentCount;
 
