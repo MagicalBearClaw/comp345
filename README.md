@@ -20,6 +20,8 @@ Fall 2017 (Section N)
 * OUTPUT: output.txt
 * Documentation generated via Doxygen 1.8.13
 
+**IMPORTANT We made a smaller resource file for the movie recommender due to moodle's file size restrictions** 
+
 ### To to build the application:
 
 ```bash
