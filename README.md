@@ -22,13 +22,15 @@ Fall 2017 (Section N)
 ### To to build the application:
 
 ```bash
-make -f makefile.mk app.exe
+make -f makefile.mk indexing.exe
 make -f makefile.mk googler.exe
+make -f makefile.mk summarizer.exe
 
 ```
 To run the application
->app.exe  
+>indexing.exe
 >googler.exe  
+>summarizer.exe
 
 
 
