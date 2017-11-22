@@ -41,9 +41,18 @@ void operator >> (IndexItem *doc, Sentence_indexer &indexer)
 		WordTokenizerStrategy *wStrat = new WordTokenizerStrategy();
 		tokenizer tkzW = tokenizer(wStrat);
 		std::vector<std::string> words = tkzW.tokenize(doc->content());
-		for(std::vector<std::string>::iterator word = words.begin(); word != words.end(); ++word) {
-			if (std::find_if(indexer.wftms.begin(), indexer.wftms.end(), [word](const Sentence_indexer::wordFrequencyTermMod & other) { return std::get<0>(other) == *word; }) == indexer.wftms.end()) {
-				indexer.wftms.push_back(std::make_tuple(*word, 0, 0.0));
+		for (std::vector<std::string>::iterator word = words.begin(); word != words.end(); ++word)
+		{
+			if (indexer.wftms.find(*word) != indexer.wftms.end())
+			{
+				if (tIdx[*word] == 0)
+				{
+					std::get<1>(indexer.wftms[*word]) += 1;
+				}
+			}
+			else
+			{
+				indexer.wftms[*word] = std::make_tuple(*word, 1, 0);
 			}
 			tIdx.indexWord(*word);
 		}
@@ -78,13 +87,11 @@ std::vector<query_result> Sentence_indexer::query(std::string queryString, int n
 	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
 
 	// generate query vector
-	for(std::vector<std::string>::const_iterator word = queryWords.begin(); word != queryWords.end(); ++word) {
-		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [word](const wordFrequencyTermMod & arg) { return std::get<0>(arg) == *word; });
+	for(std::vector<std::string>::iterator word = queryWords.begin(); word != queryWords.end(); ++word) {
+		std::unordered_map<std::string, wordFrequencyTermMod>::iterator element = wftms.find(*word);
 		if (element != wftms.end() ) {
 			queryVector.indexWord(*word);
-			if (std::find(commons.begin(), commons.end(), *element) == commons.end()) {
-				commons.push_back(*element);
-			}
+			commons.push_back(element->second);
 		}
 	}
 	queryVector.normalize(wftms);

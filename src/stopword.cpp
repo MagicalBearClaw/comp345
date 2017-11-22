@@ -20,14 +20,14 @@ StopWord::StopWord(std::string fileName) {
     stopWord = crawlToDelimiter(file, ",\n ");
     // make sure that the string actually has content
     if(!stopWord.empty()) {
-      stopWords.push_back(stopWord);
+      stopWords[stopWord] = true;
     }
   }
 }
 
 std::ostream& operator<<(std::ostream& stream, StopWord& sw) {
   for (auto i = sw.stopWords.begin(); i != sw.stopWords.end(); i++) {
-    stream << *i << ", ";
+    stream << i->first << ", ";
   }
   stream << std::endl;
 
@@ -35,5 +35,5 @@ std::ostream& operator<<(std::ostream& stream, StopWord& sw) {
 }
 
 bool StopWord::operator()(std::string word) {
-  return std::find(stopWords.begin(), stopWords.end(), word) != stopWords.end();
+  return stopWords.find(word) != stopWords.end();
 }

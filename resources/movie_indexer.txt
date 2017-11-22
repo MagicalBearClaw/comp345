@@ -1,0 +1,2 @@
+resources\movie.metadata.tsv
+resources\plot_summaries.txt

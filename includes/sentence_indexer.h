@@ -16,7 +16,6 @@ public:
 private:
 	// tuple of words their IndexItem frequency and the modifier to compute the weight of a term
 
-	std::vector<wordFrequencyTermMod> wftms;
 	// virtual int calculateDocumentFrequency(std::string term);
 };
 

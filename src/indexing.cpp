@@ -17,7 +17,7 @@ int main(void)
 	assert(ifs.good() && "Invalid file name");
 	while (!ifs.eof())
 	{
-    // upcasting YO
+   // upcasting YO
 		ifs >> *(dynamic_cast<DocumentIndexer*>(idx));
 	}
 	std::cout << *(dynamic_cast<DocumentIndexer*>(idx));

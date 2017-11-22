@@ -16,6 +16,7 @@ int main()
 		ifs >> *(DocumentIndexer*)idx;
 	}
 
+	// idx->normalize();
 	std::string buffer = "";
 	while (true)
 	{
@@ -27,7 +28,6 @@ int main()
 		else if (buffer == "!q")
 			break;
 		
-		idx->normalize();
 		std::vector<query_result> ranks = idx->query(buffer, numOfResults);
 		std::sort(ranks.begin(), ranks.end(), [](query_result a, query_result b) 
 		{

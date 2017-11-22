@@ -3,7 +3,7 @@
 #define STOPWORD_H
 
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 /**
  * Class used to filter stopwords based on a list of stopwords given
@@ -48,7 +48,7 @@ public:
    */
   bool operator()(std::string word);
 private:
-  std::vector<std::string> stopWords;/**The list of stopwords*/
+  std::unordered_map<std::string, bool> stopWords;/**The list of stopwords*/
 };
 
 #endif
