@@ -73,7 +73,7 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 
 void operator >> (Movie &movie, MovieIndexer &indexer)
 {
-	word_tokenizer_strategy *strat = new word_tokenizer_strategy();
+	WordTokenizerStrategy *strat = new WordTokenizerStrategy();
 	tokenizer tkzr = tokenizer(strat);
 	TermIndex tIdx;
 	std::vector<std::string> v = tkzr.tokenize(movie.content());
@@ -132,7 +132,7 @@ std::vector<query_result> MovieIndexer::query(std::string queryString, int numOf
 	}
 	std::vector<query_result> results;
 	TermIndex queryDoc;
-	word_tokenizer_strategy *strat = new word_tokenizer_strategy();
+	WordTokenizerStrategy *strat = new WordTokenizerStrategy();
 	tokenizer tkzr = tokenizer(strat);
 	std::vector<std::string> queryWords = tkzr.tokenize(movie->content());
 	std::vector<wordFrequencyTermMod> commonWords;

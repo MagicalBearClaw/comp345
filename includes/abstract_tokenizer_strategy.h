@@ -8,7 +8,7 @@
  * This interface is responsible for providing a stategy to break text
  * into tokens.
  */
-class abstract_tokenizer_strategy
+class AbstractTokenizerStrategy
 {
   public:
 	/**
@@ -21,7 +21,7 @@ class abstract_tokenizer_strategy
 	 * @brief Deconstructor for all tokenizer strategies which implement this interface.
 	 * 
 	 */
-	virtual ~abstract_tokenizer_strategy() {}
+	virtual ~AbstractTokenizerStrategy() {}
 };
 
 #endif //ABSTRACT_TOKENIZER_STRATEGY_H

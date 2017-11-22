@@ -1,6 +1,5 @@
 #include "../includes/indexer.h"
 #include "../includes/util.h"
-#include "../includes/word_tokenizer_strategy.h"
 #include "../includes/tokenizer.h"
 
 
@@ -31,7 +30,7 @@ bool Indexer::isNormalized(Indexer& indexer) {
 	return normalized;
 }
 // same functionality (index item*)
-Index_item* Indexer::operator[](int position)
+IndexItem* Indexer::operator[](int position)
 {
 	return std::get<0>(itis[position]);
 }

@@ -21,7 +21,7 @@ std::ostream & operator<<(std::ostream &ios, Sentence_indexer &indexer)
 	ios << std::endl;
 	return ios;
 }
-void operator >> (Index_item *doc, Sentence_indexer &indexer)
+void operator >> (IndexItem *doc, Sentence_indexer &indexer)
 {
 	std::vector<std::string> abreviations;
 	std::ifstream abvsFile("resources/abbreviations.txt");
@@ -38,7 +38,7 @@ void operator >> (Index_item *doc, Sentence_indexer &indexer)
 	std::vector<std::string> sentences = tkz.tokenize(doc->content());
 	for(std::vector<std::string>::iterator sentence = sentences.begin(); sentence != sentences.end(); ++sentence) {
 		TermIndex tIdx;
-		word_tokenizer_strategy *wStrat = new word_tokenizer_strategy();
+		WordTokenizerStrategy *wStrat = new WordTokenizerStrategy();
 		tokenizer tkzW = tokenizer(wStrat);
 		std::vector<std::string> words = tkzW.tokenize(doc->content());
 		for (std::vector<std::string>::iterator word = words.begin(); word != words.end(); ++word)
@@ -82,7 +82,7 @@ std::vector<query_result> Sentence_indexer::query(std::string queryString, int n
 	std::vector<query_result> results;
 	TermIndex queryVector;
 	std::vector<wordFrequencyTermMod> commons;
-	word_tokenizer_strategy * strat = new word_tokenizer_strategy();
+	WordTokenizerStrategy * strat = new WordTokenizerStrategy();
 	tokenizer tkzr = tokenizer(strat);
 	std::vector<std::string> queryWords = tkzr.tokenize(queryString);
 

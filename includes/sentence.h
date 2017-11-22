@@ -7,9 +7,9 @@
  * This class can also be used to retrieve metadata such as size in words
  * of a sentence, or the filename of the document it was retrieved from.
  * Also keeps track of the sentences position in the document.
- * @see Index_item
+ * @see IndexItem
  */
-class Sentence : public Index_item
+class Sentence : public IndexItem
 {
     /**
    * @brief Operator overload for debug output 

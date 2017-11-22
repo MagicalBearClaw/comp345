@@ -13,7 +13,7 @@
 * movie such as the name size and release date.
 * @see Index_item
 */
-class Movie : public Index_item
+class Movie : public IndexItem
 {
 	/**
 	* Operator overload for debug output

@@ -9,7 +9,7 @@
  * @brief This abstract base class(ABC) is used to define common code that is shared by all indexable items.
  * 
  */
-class Index_item
+class IndexItem
 {
   /**
    * @brief Extractor Operator overloaded used for debug output.
@@ -17,10 +17,10 @@ class Index_item
    * Derived classes that inherit from this base class should create their own version of this function.
    * 
    * @param ostream The output stream to write debug content to.
-   * @param indexItem An object of type Index_item which will have its contents output to the ostream.
+   * @param indexItem An object of type IndexItem which will have its contents output to the ostream.
    * @return std::ostream& returns an output stream object in order to allow for function chainning.
    */
-  friend std::ostream &operator<<(std::ostream &ostream, Index_item &indexItem);
+  friend std::ostream &operator<<(std::ostream &ostream, IndexItem &indexItem);
 
 public:
   /**
@@ -44,7 +44,7 @@ public:
   /**
      * @brief Deconstructor for all classes which implement this abstract base class.
      */
-  virtual ~Index_item() {}
+  virtual ~IndexItem() {}
 
 protected:
   std::string _name;    /**The name of the index item*/
