@@ -1,2 +1,2 @@
 resources\movie.metadata.tsv
-resources\plot_summaries.gs
+resources\plot_summaries.sm

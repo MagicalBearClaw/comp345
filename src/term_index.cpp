@@ -28,7 +28,7 @@ void TermIndex::normalize(const std::unordered_map<std::string, std::tuple<std::
 {
 	double normAcc = 0.0;
 	// check if a stopword reference is given
-	if (sw == nullptr)
+	if (sw == nullptr) //no stopwords
 	{
 		for (std::unordered_map<std::string, int>::const_iterator i = termIndexer.begin(); i != termIndexer.end(); ++i)
 		{
@@ -37,7 +37,7 @@ void TermIndex::normalize(const std::unordered_map<std::string, std::tuple<std::
 			normAcc += pow(termWeight(i->first, std::get<1>(wftm)), 2);
 		}
 	}
-	else
+	else //use stopwords
 	{
 		for (std::unordered_map<std::string, int>::const_iterator i = termIndexer.begin(); i != termIndexer.end(); ++i)
 		{

@@ -3,6 +3,10 @@
 
 #include "indexer.h"
 
+/**
+ * @brief The DocumentIndexer class is responsible for storing and maintaining a document index item.
+ * 
+ */
 class DocumentIndexer : public Indexer
 {
 	/**
@@ -28,16 +32,6 @@ public:
 	 * 
 	 */
 	~DocumentIndexer();
-
-	// virtual int calculateDocumentFrequency(std::string term);
-	/**
-	* @brief the document frequency dft for a term t is defined as the number of documents that t appears in
-	*
-	* This member function is used to count the total number of documents that a word appears in
-	* @param word the word to caluclate the frequency for
-	* @return int the documentFrequency for the specified word
-	*/
-	// virtual int calculateDocumentFrequency(std::string term);
 };
 
 #endif //DOCUMENT_INDEXER_H

@@ -5,6 +5,10 @@
 #include "Movie.h"
 #include <unordered_map>
 
+/**
+ * @brief The MovieIndexer class is responsible for storing and maintaining a Movie index item.
+ * 
+ */
 class MovieIndexer : public Indexer
 {
 	/**
@@ -15,6 +19,13 @@ class MovieIndexer : public Indexer
 	* @return std::ifstream allows for chaining
 	*/
 	friend std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer);
+	/**
+	 * @brief Overloaded inserter used for deubug output
+	 * 
+	 * @param ios output stream of movie indexer class
+	 * @param indexer the movieIndexer used for debug output
+	 * @return std::ostream& 
+	 */
 	friend std::ostream & operator<<(std::ostream &ios, MovieIndexer &indexer);
 	friend void operator >> (Movie &doc, MovieIndexer &indexer);
 public:
@@ -27,32 +38,46 @@ public:
 	MovieIndexer();
 	/**
 	* @brief Default Deconstructor
-	*
+	* Iterates through all movie references and deletes them
 	*/
 	~MovieIndexer();
 
-	// virtual int calculateDocumentFrequency(std::string term);
-	/**
-	* @brief the document frequency dft for a term t is defined as the number of documents that t appears in
-	*
-	* This member function is used to count the total number of documents that a word appears in
-	* @param word the word to caluclate the frequency for
-	* @return int the documentFrequency for the specified word
-	*/
-	// virtual int calculateDocumentFrequency(std::string term);
-
 private:
+	/**
+	 * @brief Retrieves the movie name
+	 * 
+	 * @param summary 
+	 * @param id 
+	 * @param start 
+	 * @return std::string 
+	 */
 	std::string getName(const std::string& summary, int id, int start);
+	/**
+	 * @brief Retrieves the movie release date
+	 * 
+	 * @param summary 
+	 * @param id 
+	 * @param start 
+	 * @return std::string 
+	 */
 	std::string getReleaseDate(const std::string& summary, int id, int start);
+	/**
+	 * @brief Produce the movie summary index
+	 * 
+	 * @param ifsPlots 
+	 * @return std::unordered_map<int, std::string> 
+	 */
 	std::unordered_map<int, std::string> buildMovieSummaryIndx(std::ifstream& ifsPlots);
+	/**
+	 * @brief given a movie name retrieve its meta information
+	 * 
+	 * @param movieName 
+	 * @return Movie* 
+	 */
 	Movie* getMovieMetaInformationByName(const std::string& movieName);
 	std::unordered_map<int, std::string> sumIndx;
 	std::vector<Movie*> getMovies(const std::unordered_map<int, std::string>& sumIdx, std::ifstream& movieMetaInfo);
 	std::vector<Movie*> movies;
 };
-
-
-
-
 
 #endif //DOCUMENT_INDEXER_H

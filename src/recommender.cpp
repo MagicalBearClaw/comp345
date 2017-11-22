@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <iomanip>
 #include "../includes/movie_indexer.h"
+#include "../includes/index_exception.h"
+
 int main()
 {
 	int numOfResults = 5;
@@ -28,8 +30,16 @@ int main()
 		else if (buffer == "!q")
 			break;
 
-		// idx->normalize();
-		std::vector<query_result> ranks = idx->query(buffer, numOfResults);
+		std::vector<query_result> ranks;
+		try{
+			 ranks = idx->query(buffer, numOfResults);
+		}
+		catch (const IndexException &e){
+			std::cerr << e.what() << std::endl;
+			std::cout << "No movie with that name was found" << std::endl;
+			continue;
+		}
+		
 		int maxLength = ranks[0].getItem()->name().size();
 		std::sort(ranks.begin(), ranks.end(), [](query_result a, query_result b)
 		{
