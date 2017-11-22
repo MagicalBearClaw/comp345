@@ -37,7 +37,7 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 	std::string summariesDoc;
 	std::string lines[2];
 	int i = 0;
-	std::cout << "Loading Files..." << std::endl;
+	std::cout << "Loading files..." << std::endl;
 	while (!ifs.eof())
 	{
 		lines[i] = crawlToDelimiter(ifs, "\n");
@@ -57,7 +57,7 @@ std::ifstream &operator >> (std::ifstream &ifs, MovieIndexer &indexer)
 	ifsPlots.close();
 
 	indexer.movies = indexer.getMovies(indexer.sumIndx, ifsMeta);
-	std::cout << "Indexing movies!" << std::endl;
+	std::cout << "Indexing movies..." << std::endl;
 	for (std::vector<Movie*>::const_iterator it = indexer.movies.begin(); it != indexer.movies.end(); ++it)
 	{
 		if (*it)

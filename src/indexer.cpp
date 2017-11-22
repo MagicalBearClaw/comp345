@@ -40,7 +40,7 @@ Index_item* Indexer::operator[](int position)
 // can be implemented on base class
 void Indexer::normalize()
 {
-	std::cout << "Beginning Normalization!" << std::endl;
+	std::cout << "Beginning normalization..." << std::endl;
 	int termFrequency = 0;
 	int documentFrequency = 0;
 	double dtModifier = 0.0;
