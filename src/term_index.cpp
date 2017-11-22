@@ -4,12 +4,12 @@
 
 TermIndex::TermIndex() : norm(0.0) {}
 
-void TermIndex::indexWord(std::string word)
+void TermIndex::indexWord(std::string& word)
 {
 	termIndexer[word] = (*this)[word] + 1;
 }
 
-int TermIndex::operator[](std::string word)
+int TermIndex::operator[](const std::string& word)
 {
 	if (termIndexer.find(word) == termIndexer.end())
 	{ // checks if word does not exist
@@ -18,7 +18,7 @@ int TermIndex::operator[](std::string word)
 	return termIndexer[word];
 }
 
-double TermIndex::termWeight(std::string word, double documentFrequencyModifier)
+double TermIndex::termWeight(std::string& word, double documentFrequencyModifier)
 {
 	int termCount = (*this)[word];
 	return termCount ? (1 + log(termCount)) * documentFrequencyModifier : 0.0;
@@ -32,16 +32,18 @@ void TermIndex::normalize(const std::vector<std::tuple<std::string, int, double>
 	{
 		for (std::vector<std::tuple<std::string, int, double>>::const_iterator i = wftms.begin(); i != wftms.end(); ++i)
 		{
-			normAcc += pow(termWeight(std::get<0>(*i), std::get<1>(*i)), 2);
+			std::string w = std::get<0>(*i);
+			normAcc += pow(termWeight(w, std::get<1>(*i)), 2);
 		}
 	}
 	else
 	{
 		for (std::vector<std::tuple<std::string, int, double>>::const_iterator i = wftms.begin(); i != wftms.end(); ++i)
 		{
+			std::string w = std::get<0>(*i);
 			if (!sw->operator()(std::get<0>(*i)))
 			{
-				normAcc += pow(termWeight(std::get<0>(*i), std::get<1>(*i)), 2);
+				normAcc += pow(termWeight(w, std::get<1>(*i)), 2);
 			}
 		}
 	}

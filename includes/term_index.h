@@ -2,7 +2,7 @@
 #define TERM_INDEX_H
 
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <tuple>
 
@@ -13,14 +13,14 @@ public:
   TermIndex();
   // ~TermIndex();
 
-  void indexWord(std::string word);
-  int operator[](const std::string word);
-  double termWeight(std::string word, double documentModifier);
+  void indexWord(std::string& word);
+  int operator[](const std::string& word);
+  double termWeight(std::string& word, double documentModifier);
   void normalize(const std::vector<std::tuple<std::string, int, double>> &wftms, StopWord *sw = nullptr);
   double docNorm();
 private:
   double norm;
-  std::map<std::string, int> termIndexer;
+  std::unordered_map<std::string, int> termIndexer;
 };
 
 #endif //TERM_INDEX_H

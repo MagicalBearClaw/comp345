@@ -35,7 +35,7 @@ std::ifstream &operator>>(std::ifstream &ifs, DocumentIndexer &indexer)
 		{
 			indexer.maxColumnSize = docName.length();
 		}
-		Document *doc = new Document(docName); // probably memory leak make destructor for indexer clean this up
+		Document *doc = new Document(); // probably memory leak make destructor for indexer clean this up
 		*doc >> indexer;											 // "stream" document into indexer
 	}
 
@@ -61,7 +61,8 @@ void operator>>(Document &doc, DocumentIndexer &indexer)
 			}
 			indexer.wftms.push_back(make_tuple(*i, 0, 0)); // 😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠😠
 		}
-		tIdx.indexWord(*i);
+		std::string w = *i;
+		tIdx.indexWord(w);
 		// check if word count size is bigger than half the column
 		if (std::to_string(tIdx[*i]).length() > indexer.maxColumnSize / 2 + indexer.maxColumnSize % 2 + 1)
 		{

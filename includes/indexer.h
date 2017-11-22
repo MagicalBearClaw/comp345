@@ -7,13 +7,6 @@
 #include "../includes/query_result.h"
 #include "../includes/term_index.h"
 
-/**
- * @brief The starting point of the program
- * 
- * @return int 0 if all went well.
- */
-int main();
-
 
 /**
  * The Indexer class is responsible for storing and maintaining a index item.
@@ -87,7 +80,7 @@ protected:
 	int maxWordLength;
 	int maxColumnSize; /**ctr used for display of count columns*/
 	bool normalized; /** Status check if the index has been normalized*/
-	std::vector<Document> documents; /** vector of all documents*/
+	std::vector<Index_item> documents; /** vector of all documents*/
 	std::vector<std::string> docNames; /** vector of all document names*/
 	// std::vector<std::string> allWords; //**all words in the index*/
 	std::vector<double> docTermModifiers; /**log(documnetCount/documentFrequency)*/

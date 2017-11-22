@@ -6,6 +6,6 @@
  * 
  * @return int Return status: value other than zero indicates an error has occured.
  */
-int main();
+//int main();
 
 #endif // SUMMARIZER_H

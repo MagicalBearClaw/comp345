@@ -81,7 +81,7 @@ std::vector<query_result> Sentence_indexer::query(std::string queryString, int n
 	for(std::vector<std::string>::const_iterator word = queryWords.begin(); word != queryWords.end(); ++word) {
 		std::vector<wordFrequencyTermMod>::iterator element = std::find_if(wftms.begin(), wftms.end(), [word](const wordFrequencyTermMod & arg) { return std::get<0>(arg) == *word; });
 		if (element != wftms.end() ) {
-			queryVector.indexWord(*word);
+			queryVector.indexWord((std::string)*word);
 			if (std::find(commons.begin(), commons.end(), *element) == commons.end()) {
 				commons.push_back(*element);
 			}
