@@ -52,7 +52,7 @@ void Indexer::normalize()
 		dtModifier = std::log((double)documentCount / (double)std::get<1>(iter->second));
 		// std::get<1>(iter->second) = documentFrequency;
 		std::get<2>(iter->second) = dtModifier;
-		// std::cout << "Calculating term modifiers: " << iter->first << " " << dtModifier << std::endl;
+		// std::cout << "Calculating term modifiers: " << iter->first << " " << (double)std::get<1>(iter->second) << std::endl;
 		// docTermModifiers.push_back(dtModifier);
 		// docTermFrequency.push_back(documentFrequency);
 	}

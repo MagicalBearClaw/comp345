@@ -45,7 +45,10 @@ void operator >> (Index_item *doc, Sentence_indexer &indexer)
 		{
 			if (indexer.wftms.find(*word) != indexer.wftms.end())
 			{
-				std::get<1>(indexer.wftms[*word]) += 1;
+				if (tIdx[*word] == 0)
+				{
+					std::get<1>(indexer.wftms[*word]) += 1;
+				}
 			}
 			else
 			{

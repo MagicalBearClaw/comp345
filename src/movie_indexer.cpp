@@ -93,7 +93,9 @@ void operator >> (Movie &movie, MovieIndexer &indexer)
 			// {
 			// 	indexer.maxWordLength = i->length();
 			// }
-			std::get<1>(indexer.wftms[*i]) += 1;
+			if (tIdx[*i] == 0) {
+				std::get<1>(indexer.wftms[*i]) += 1;
+			}
 		} else {
 			indexer.wftms[*i] = std::make_tuple(*i, 1, 0);
 		}
